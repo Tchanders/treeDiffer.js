@@ -3,6 +3,7 @@ Differ
  */
 
 // Differ, compares two trees and stores the distance
+// Algorithm outlined in: http://epubs.siam.org/doi/abs/10.1137/0218082?journalCode=smjcat
 // In the future, should return transactions to get from tree1 to tree2
 de.differ = function ( tree1, tree2 ) {
 

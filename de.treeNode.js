@@ -10,7 +10,7 @@ de.treeNode = function ( node ) {
 };
 
 // Add children to create the tree structure
-// For full tree functionality, need to make a diff.tree
+// For full tree functionality, need to make a de.tree
 de.treeNode.prototype.addChild = function ( child ) {
 	this.children.push( child );
 };

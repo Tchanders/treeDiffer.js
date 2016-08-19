@@ -1,4 +1,4 @@
-// Example from paper
+// Simple example
 
 de.t1 = new de.treeNode( new de.abstractNode( 'f' ) );
 de.t1.addChild( new de.treeNode( new de.abstractNode( 'd' ) ) );
