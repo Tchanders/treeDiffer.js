@@ -55,7 +55,7 @@ de.differ.prototype.getNodeDistance = function ( node1, node2 ) {
 	if ( node1 === null || node2 === null ) {
 		return 1;
 	}
-	if ( node1.node.isEqual( node2.node ) ) {
+	if ( node1.isEqual( node2 ) ) {
 		return 0;
 	}
 	return 1;

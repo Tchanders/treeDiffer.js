@@ -14,3 +14,10 @@ de.treeNode = function ( node ) {
 de.treeNode.prototype.addChild = function ( child ) {
 	this.children.push( child );
 };
+
+// Check if two treeNodes are equal
+// Node equality is optionally defined by overriding this method,
+// otherwise nodes are not equal by default
+de.treeNode.prototype.isEqual = function ( otherNode ) {
+	return false;
+};

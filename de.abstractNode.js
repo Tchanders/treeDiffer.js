@@ -8,9 +8,10 @@ de.abstractNode = function ( label ) {
 	this.label = label;
 };
 
+// Override de.treeNode isEqual method
 // Check if this node is equal to another node
-de.abstractNode.prototype.isEqual = function ( node ) {
-	if ( this.label === node.label ) {
+de.treeNode.prototype.isEqual = function ( otherNode ) {
+	if ( this.node.label === otherNode.node.label ) {
 		return true;
 	}
 	return false;
