@@ -1,19 +1,19 @@
 // Simple example
 
-de.t1 = new de.treeNode( new de.abstractNode( 'f' ) );
-de.t1.addChild( new de.treeNode( new de.abstractNode( 'd' ) ) );
-de.t1.addChild( new de.treeNode( new de.abstractNode( 'e' ) ) );
-de.t1.children[0].addChild( new de.treeNode( new de.abstractNode( 'a' ) ) );
-de.t1.children[0].addChild( new de.treeNode( new de.abstractNode( 'c' ) ) );
-de.t1.children[0].children[1].addChild( new de.treeNode( new de.abstractNode( 'b' ) ) );
-de.tree1 = new de.tree( de.t1 );
+diff.t1 = new diff.treeNode( new diff.abstractNode( 'f' ) );
+diff.t1.addChild( new diff.treeNode( new diff.abstractNode( 'd' ) ) );
+diff.t1.addChild( new diff.treeNode( new diff.abstractNode( 'e' ) ) );
+diff.t1.children[0].addChild( new diff.treeNode( new diff.abstractNode( 'a' ) ) );
+diff.t1.children[0].addChild( new diff.treeNode( new diff.abstractNode( 'c' ) ) );
+diff.t1.children[0].children[1].addChild( new diff.treeNode( new diff.abstractNode( 'b' ) ) );
+diff.tree1 = new diff.tree( diff.t1 );
 
-de.t2 = new de.treeNode( new de.abstractNode( 'f' ) );
-de.t2.addChild( new de.treeNode( new de.abstractNode( 'c' ) ) );
-de.t2.addChild( new de.treeNode( new de.abstractNode( 'e' ) ) );
-de.t2.children[0].addChild( new de.treeNode( new de.abstractNode( 'd' ) ) );
-de.t2.children[0].children[0].addChild( new de.treeNode( new de.abstractNode( 'a' ) ) );
-de.t2.children[0].children[0].addChild( new de.treeNode( new de.abstractNode( 'b' ) ) );
-de.tree2 = new de.tree( de.t2 );
+diff.t2 = new diff.treeNode( new diff.abstractNode( 'f' ) );
+diff.t2.addChild( new diff.treeNode( new diff.abstractNode( 'c' ) ) );
+diff.t2.addChild( new diff.treeNode( new diff.abstractNode( 'e' ) ) );
+diff.t2.children[0].addChild( new diff.treeNode( new diff.abstractNode( 'd' ) ) );
+diff.t2.children[0].children[0].addChild( new diff.treeNode( new diff.abstractNode( 'a' ) ) );
+diff.t2.children[0].children[0].addChild( new diff.treeNode( new diff.abstractNode( 'b' ) ) );
+diff.tree2 = new diff.tree( diff.t2 );
 
-de.difference = new de.differ( de.tree1, de.tree2 );
+diff.difference = new diff.differ( diff.tree1, diff.tree2 );

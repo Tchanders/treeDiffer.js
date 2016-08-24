@@ -4,7 +4,7 @@ Tree
 
 // Tree, made up of treeNodes
 // may need to make this into a forest - should be the same but array of ordered roots
-de.tree = function( node ) {
+diff.tree = function( node ) {
 
 	this.root = node;
 	this.orderedNodes = [];
@@ -15,7 +15,7 @@ de.tree = function( node ) {
 };
 
 // Stores the nodes in order and adds indices to the nodes
-de.tree.prototype.getKeyRootsAndIndices = function () {
+diff.tree.prototype.getKeyRootsAndIndices = function () {
 
 	// Adds nodes to an array in post order
 	// Also adds indices to the nodes

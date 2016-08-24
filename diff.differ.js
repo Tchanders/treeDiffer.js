@@ -6,7 +6,7 @@ Differ
 // tree to the second tree. Each transactions is [nodeToRemove, nodeToInsert], either of
 // which can be null.
 // Algorithm outlined in: http://epubs.siam.org/doi/abs/10.1137/0218082?journalCode=smjcat
-de.differ = function ( tree1, tree2 ) {
+diff.differ = function ( tree1, tree2 ) {
 
 	var i, ilen, j, jlen;
 
@@ -50,7 +50,7 @@ de.differ = function ( tree1, tree2 ) {
 
 };
 
-de.differ.prototype.getDiff = function ( tree1, tree2, transactions ) {
+diff.differ.prototype.getDiff = function ( tree1, tree2, transactions ) {
 	var i, ilen, j, jlen, iNulls, jNulls, ii, jj, keyRoot1, keyRoot2;
 
 	for ( i = 0, ilen = tree1.keyRoots.length; i < ilen; i++ ) {
@@ -83,7 +83,7 @@ de.differ.prototype.getDiff = function ( tree1, tree2, transactions ) {
 // Here it is assumed that the costs of inserting, removing and relabelling are equal
 // Hence the cost of any one operation is always 1
 // Modify this for a more complicated cost function, but beware of performance impact
-de.differ.prototype.getNodeDistance = function ( node1, node2 ) {
+diff.differ.prototype.getNodeDistance = function ( node1, node2 ) {
 	if ( node1 === null && node2 === null ) {
 		return 0;
 	}
@@ -97,7 +97,7 @@ de.differ.prototype.getNodeDistance = function ( node1, node2 ) {
 };
 
 // Finds minimum transactions between trees rooted at particular nodes
-de.differ.prototype.getTransactions = function ( keyRoot1, keyRoot2, iNulls, jNulls, orderedNodes1, orderedNodes2, transactions ) {
+diff.differ.prototype.getTransactions = function ( keyRoot1, keyRoot2, iNulls, jNulls, orderedNodes1, orderedNodes2, transactions ) {
 	var i, j, iMinus1, jMinus1, costs, nodeDistance, transaction, remove, insert, change;
 
 	// Populate this.transactions
