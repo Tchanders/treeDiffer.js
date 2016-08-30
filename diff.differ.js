@@ -8,7 +8,7 @@ Differ
 // Algorithm outlined in: http://epubs.siam.org/doi/abs/10.1137/0218082?journalCode=smjcat
 diff.differ = function ( tree1, tree2 ) {
 
-	var i, ilen, j, jlen;
+	var i, ilen, j, jlen, transactions;
 
 	// Temporary store of transactions
 	transactions = {
@@ -35,7 +35,7 @@ diff.differ = function ( tree1, tree2 ) {
 		};
 		this.staticTransactions[i] = {
 			null: [i, null]
-		}
+		};
 		for ( j = 0, jlen = tree2.orderedNodes.length; j < jlen; j++ ) {
 			transactions[null][j] = [];
 			transactions[i][j] = [];
