@@ -90,7 +90,7 @@ diff.differ.prototype.getDiff = function ( tree1, tree2, transactions, indicesTo
 
 	for ( i = 0, ilen = tree1.orderedNodes.length; i < ilen; i++ ) {
 		for ( j = 0, jlen = tree1.orderedNodes.length; j < jlen; j++ ) {
-			if ( this.transactions[i][j] ) {
+			if ( this.transactions[i][j] && this.transactions[i][j].length > 0 ) {
 				this.transactions[i][j] = [indicesToTransactions[this.transactions[i][j][0]], indicesToTransactions[this.transactions[i][j][1]]]
 			}
 		}
