@@ -8,7 +8,7 @@ Differ
 // Algorithm outlined in: http://epubs.siam.org/doi/abs/10.1137/0218082?journalCode=smjcat
 diff.differ = function ( tree1, tree2 ) {
 
-	var i, ilen, j, jlen, transactions;
+	var i, ilen, j, jlen, transactions, indicesToTransactions, transactionIndicesCount = 0;
 
 	// Temporary store of transactions
 	transactions = {
@@ -19,38 +19,48 @@ diff.differ = function ( tree1, tree2 ) {
 
 	// Store all the possible transactions, so this.transactions can be an array of
 	// pointers to these transactions, to avoid creating each transaction multiple times
-	this.staticTransactions = {
+	this.transactionIndices = {
 		null: {
-			null: {}
+			null: transactionIndicesCount
 		}
 	};
+	transactionIndicesCount += 1;
+	indicesToTransactions = [];
+	indicesToTransactions.push( [null, null] );
 
 	// Permanent store of transactions
 	this.transactions = {};
 
-	// Add keys to transactions stores, and make the static transactions
+	// Add keys to transactions stores, and make the transaction indices
 	for ( i = 0, ilen = tree1.orderedNodes.length; i < ilen; i++ ) {
 		transactions[i] = {
 			null: []
 		};
-		this.staticTransactions[i] = {
-			null: [i, null]
+		this.transactionIndices[i] = {
+			null: transactionIndicesCount
 		};
+		transactionIndicesCount += 1;
+		indicesToTransactions.push( [i, null] );
 		for ( j = 0, jlen = tree2.orderedNodes.length; j < jlen; j++ ) {
 			transactions[null][j] = [];
 			transactions[i][j] = [];
 
-			this.staticTransactions[null][j] = [null, j];
-			this.staticTransactions[i][j] = [i, j];
+			this.transactionIndices[null][j] = transactionIndicesCount;
+			transactionIndicesCount += 1;
+			this.transactionIndices[i][j] = transactionIndicesCount;
+			transactionIndicesCount += 1;
+
+			indicesToTransactions.push( [null, j] );
+			indicesToTransactions.push( [i, j] );
 		}
 		this.transactions[i] = {};
 	}
 
-	this.getDiff( tree1, tree2, transactions );
+	this.getDiff( tree1, tree2, transactions, indicesToTransactions );
 
 };
 
-diff.differ.prototype.getDiff = function ( tree1, tree2, transactions ) {
+diff.differ.prototype.getDiff = function ( tree1, tree2, transactions, indicesToTransactions ) {
 	var i, ilen, j, jlen, iNulls, jNulls, ii, jj, keyRoot1, keyRoot2;
 
 	for ( i = 0, ilen = tree1.keyRoots.length; i < ilen; i++ ) {
@@ -59,7 +69,7 @@ diff.differ.prototype.getDiff = function ( tree1, tree2, transactions ) {
 		keyRoot1 = tree1.orderedNodes[tree1.keyRoots[i]];
 		iNulls = [];
 		for ( ii = keyRoot1.leftmost; ii < keyRoot1.index + 1; ii++ ) {
-			iNulls.push( this.staticTransactions[ii][null] );
+			iNulls.push( this.transactionIndices[ii][null] );
 			transactions[ii][null] = iNulls.slice();
 		}
 
@@ -69,12 +79,20 @@ diff.differ.prototype.getDiff = function ( tree1, tree2, transactions ) {
 			keyRoot2 = tree2.orderedNodes[tree2.keyRoots[j]];
 			jNulls = [];
 			for ( jj = keyRoot2.leftmost; jj < keyRoot2.index + 1; jj++ ) {
-				jNulls.push( this.staticTransactions[null][jj] );
+				jNulls.push( this.transactionIndices[null][jj] );
 				transactions[null][jj] = jNulls.slice();
 			}
 
 			// Get the diff
 			this.getTransactions( keyRoot1, keyRoot2, iNulls, jNulls, tree1.orderedNodes, tree2.orderedNodes, transactions );
+		}
+	}
+
+	for ( i = 0, ilen = tree1.orderedNodes.length; i < ilen; i++ ) {
+		for ( j = 0, jlen = tree1.orderedNodes.length; j < jlen; j++ ) {
+			if ( this.transactions[i][j] ) {
+				this.transactions[i][j] = [indicesToTransactions[this.transactions[i][j][0]], indicesToTransactions[this.transactions[i][j][1]]]
+			}
 		}
 	}
 
@@ -131,19 +149,19 @@ diff.differ.prototype.getTransactions = function ( keyRoot1, keyRoot2, iNulls, j
 				if ( transaction === 0 ) {
 					// Record a remove
 					( transactions[i][j] = remove.slice() ).push(
-						this.staticTransactions[i][null]
+						this.transactionIndices[i][null]
 					);
 				} else if ( transaction === 1 ) {
 					// Record an insert
 					( transactions[i][j] = insert.slice() ).push(
-						this.staticTransactions[null][j]
+						this.transactionIndices[null][j]
 					);
 				} else {
 					transactions[i][j] = change.slice();
 					// If nodes i and j are different, record a change,
 					// otherwise there is no transaction
 					if ( nodeDistance === 1 ) {
-						transactions[i][j].push( this.staticTransactions[i][j] );
+						transactions[i][j].push( this.transactionIndices[i][j] );
 					}
 				}
 
@@ -160,12 +178,12 @@ diff.differ.prototype.getTransactions = function ( keyRoot1, keyRoot2, iNulls, j
 				if ( transaction === 0 ) {
 					// Record a remove
 					( transactions[i][j] = remove.slice() ).push(
-						this.staticTransactions[i][null]
+						this.transactionIndices[i][null]
 					);
 				} else if ( transaction === 1 ) {
 					// Record an insert
 					( transactions[i][j] = insert.slice() ).push(
-						this.staticTransactions[null][j]
+						this.transactionIndices[null][j]
 					);
 				} else {
 					// Record a change
