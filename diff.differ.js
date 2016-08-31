@@ -29,7 +29,9 @@ diff.differ = function ( tree1, tree2 ) {
 	indicesToTransactions.push( [null, null] );
 
 	// Permanent store of transactions
-	this.transactions = {};
+	this.transactions = {
+		null: {}
+	};
 
 	// Add keys to transactions stores, and make the transaction indices
 	for ( i = 0, ilen = tree1.orderedNodes.length; i < ilen; i++ ) {
@@ -132,12 +134,12 @@ diff.differ.prototype.getTransactions = function ( keyRoot1, keyRoot2, iNulls, j
 		for ( j = keyRoot2.leftmost; j < keyRoot2.index + 1; j++ ) {
 			jMinus1 = j === keyRoot2.leftmost ? null : j - 1;
 
-			// Previous transactions, leading up to a remove, insert or change
-			remove = transactions[iMinus1][j];
-			insert = transactions[i][jMinus1];
-			change = transactions[iMinus1][jMinus1];
-
 			if ( orderedNodes1[i].leftmost === keyRoot1.leftmost && orderedNodes2[j].leftmost === keyRoot2.leftmost ) {
+
+				// Previous transactions, leading up to a remove, insert or change
+				remove = transactions[iMinus1][j];
+				insert = transactions[i][jMinus1];
+				change = transactions[iMinus1][jMinus1];
 
 				nodeDistance = this.getNodeDistance( orderedNodes1[i], orderedNodes2[j] );
 
@@ -169,6 +171,15 @@ diff.differ.prototype.getTransactions = function ( keyRoot1, keyRoot2, iNulls, j
 
 				this.transactions[i][j] = transactions[i][j].slice();
 			} else {
+
+				// Previous transactions, leading up to a remove, insert or change
+				remove = transactions[iMinus1][j];
+				insert = transactions[i][jMinus1];
+				change = transactions[
+					orderedNodes1[i].leftmost - 1 < 0 ? null : orderedNodes1[i].leftmost - 1
+				][
+					orderedNodes2[j].leftmost - 1 < 0 ? null : orderedNodes2[j].leftmost - 1
+				];
 
 				costs = [
 					remove.length + 1,
