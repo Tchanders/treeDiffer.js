@@ -13,4 +13,6 @@ Trees can be made of any type of node, as long as the nodes are connected in a [
 
 Two functions need to be defined: one for wrapping nodes in the treeDiffer.TreeNode class, and one for determining whether two nodes are equal, which should override treeDiffer.TreeNode.prototype.isEqual
 
-An example of using treeDiffer to diff HTML is provided.
+## Demo
+
+An example of using treeDiffer to diff HTML: https://tchanders.github.io/treeDiffer.js/
