@@ -11,8 +11,8 @@ treeDiffer finds the minimum transactions to get from the first tree to the seco
 
 Trees can be made of any type of node, as long as the nodes are connected in a [tree structure](https://en.wikipedia.org/wiki/Tree_%28data_structure%29).
 
-Two functions need to be defined: one for wrapping nodes in the treeDiffer.TreeNode class, and one for determining whether two nodes are equal, which should override treeDiffer.TreeNode.prototype.isEqual
+The abstract treeDiffer.treeNode class should be extended to work with the specific node type.
 
 ## Demo
 
-An example of using treeDiffer to diff HTML: https://tchanders.github.io/treeDiffer.js/
+Using treeDiffer to diff HTML: https://tchanders.github.io/treeDiffer.js/
