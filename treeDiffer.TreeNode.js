@@ -7,10 +7,9 @@
 /**
  * TreeNode
  *
- * A consistent type of node for building Trees to be diffed. Real-world
- * nodes should be wrapped in TreeNodes, and their relationships
- * specified using addChild. Then a Tree should be built by passing the
- * root node into the Tree constructor.
+ * Abstract TreeNode class for Trees to be diffed. It should be extended,
+ * then a Tree should be built by passing the root node and the name of
+ * the new class into the Tree constructor.
  *
  * @class
  * @constructor
@@ -19,7 +18,6 @@
 treeDiffer.TreeNode = function ( node ) {
 	this.node = node;
 	this.children = [];
-	// These properties will be populated when a Tree is built
 	this.index = null;
 	this.leftmost = null;
 };
@@ -36,7 +34,12 @@ treeDiffer.TreeNode.prototype.addChild = function ( child ) {
 
 /**
  * Check if another TreeNode is equal to this node. Conditions for equality
- * will depend on the exact use case, so should be specified per
- * implementation.
+ * will depend on the use case.
  */
 treeDiffer.TreeNode.prototype.isEqual = null;
+
+/**
+ * Get the children of the original node wrapped by this tree node. How to
+ * find and filter children will depend on the use case.
+ */
+treeDiffer.TreeNode.prototype.getOriginalNodeChildren = null;

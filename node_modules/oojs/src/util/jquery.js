@@ -1,0 +1,3 @@
+/*global $ */
+
+oo.isPlainObject = $.isPlainObject;

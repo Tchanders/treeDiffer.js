@@ -16,13 +16,14 @@
  * @constructor
  * @param {treeDiffer.TreeNode} node Root node of the tree
  */
-treeDiffer.Tree = function ( node ) {
+treeDiffer.Tree = function ( node, nodeClass ) {
 
-	this.root = node;
+	this.root = null;
+	this.nodeClass = nodeClass;
 	this.orderedNodes = [];
 	this.keyRoots = [];
 
-	this.findKeyRootsAndOrderedNodes();
+	this.findKeyRootsAndOrderedNodes( node );
 
 };
 
@@ -30,43 +31,48 @@ treeDiffer.Tree = function ( node ) {
  * Find the post-ordering of the tree nodes, the keyroots and the leftmost of each
  * node.
  */
-treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function () {
+treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function ( node ) {
 	var leftmost,
-		leftmostsToKeyRoots = {};
+		leftmostsToKeyRoots = {},
+		tree = this;
 
 	/**
 	 * Find the tree nodes in post-order, find the leftmost of each node, and store
 	 * the order and leftmost as properties of the nodes.
 	 *
-	 * @param {treeDiffer.TreeNode} node Node currently being checked
+	 * @param {treeDiffer.TreeNode} treeNode Node currently being checked
 	 * @param {Array} orderedNodes Array to be populated with nodes in order
 	 * @param {Object} leftmostsToKeyRoots Each keyroot and its leftmost
 	 */
-	function postOrderNodes( node, orderedNodes, leftmostsToKeyRoots ) {
-		var i, ilen;
+	function postOrderNodes( treeNode, orderedNodes, leftmostsToKeyRoots ) {
+		var i, ilen, childNode,
+			children = treeNode.getOriginalNodeChildren();
 
-		for ( i = 0, ilen = node.children.length; i < ilen; i++ ) {
-			postOrderNodes( node.children[ i ], orderedNodes, leftmostsToKeyRoots );
+		for ( i = 0, ilen = children.length; i < ilen; i++ ) {
+			childNode = new tree.nodeClass( children[ i ] );
+			treeNode.addChild( childNode );
+			postOrderNodes( childNode, orderedNodes, leftmostsToKeyRoots );
 		}
 
 		// Record node order
-		orderedNodes.push( node );
-		node.index = orderedNodes.length - 1;
+		orderedNodes.push( treeNode );
+		treeNode.index = orderedNodes.length - 1;
 
 		// Record index of leftmost node
 		// If this node is a leaf, it is its own leftmost
-		node.leftmost = node.children.length === 0 ? node.index : node.children[ 0 ].leftmost;
+		treeNode.leftmost = treeNode.children.length === 0 ? treeNode.index : treeNode.children[ 0 ].leftmost;
 
 		// Update the key root corresponding to this leftmost
 		// A keyroot is the higest indexed node with each leftmost
-		leftmostsToKeyRoots[ node.leftmost ] = node.index;
+		leftmostsToKeyRoots[ treeNode.leftmost ] = treeNode.index;
 	}
 
 	// Store the nodes in order
+	this.root = new tree.nodeClass( node );
 	this.orderedNodes = [];
 	postOrderNodes( this.root, this.orderedNodes, leftmostsToKeyRoots );
 
-	// Store the key roots in order of node index
+	// Store the the key roots in order of node index
 	for ( leftmost in leftmostsToKeyRoots ) {
 		this.keyRoots.push( leftmostsToKeyRoots[ leftmost ] );
 	}

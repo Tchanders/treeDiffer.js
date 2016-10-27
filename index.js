@@ -1,23 +1,44 @@
 /**
- * Example of how to diff two trees in 5 steps:
+ * Example of how to diff two trees in 5 steps. NB this example depends
+ * on the OOJS library for inheritance, but other implementations don't
+ * have to.
  *
- * 1. Define the TreeNode isEqual method
- * 2. Wrap the nodes in TreeNodes
- * 3. Make Trees from the root TreeNodes
+ * 1. Extend treeDiffer.TreeNode class to work with the real-world nodes
+ * 2. Define isEqual and getOriginalNodeChildren methods for this class
+ * 3. Make Trees, passing in the root nodes and the new class name
  * 4. Diff the Trees using the Differ
  * 5. Display the diffs
  */
 
+/* global OO */
+
+// STEP 1
+
 /**
- * Step 1.
+ * Tree node for conducting a tree diff on DOM nodes.
  *
- * Override for TreeNode isEqual method. Here nodes are considered equal if they
- * have the same tagName, or are text nodes with the same text content.
+ * @class
+ * @extends treeDiffer.TreeNode
+ * @constructor
+ */
+treeDiffer.DomTreeNode = function ( node ) {
+	// Parent constructor
+	treeDiffer.DomTreeNode.parent.call( this, node );
+};
+
+OO.inheritClass( treeDiffer.DomTreeNode, treeDiffer.TreeNode );
+
+// STEP 2
+
+/**
+ * Determine whether two tree nodes are equal. Here nodes are considered
+ * equal if they have the same tagName (if they are not text nodes), or
+ * have the same text content (if they are text nodes).
  *
  * @param {treeDiffer.TreeNode} otherNode The node to compare to this node
  * @return {boolean} Nodes are equal
  */
-treeDiffer.TreeNode.prototype.isEqual = function ( otherNode ) {
+treeDiffer.DomTreeNode.prototype.isEqual = function ( otherNode ) {
 	if ( this.node.nodeType === Node.TEXT_NODE ) {
 		return otherNode.node.nodeType === Node.TEXT_NODE &&
 			otherNode.node.textContent === this.node.textContent;
@@ -27,40 +48,34 @@ treeDiffer.TreeNode.prototype.isEqual = function ( otherNode ) {
 };
 
 /**
- * Steps 2 - 4.
+ * Gets children of the original node.
  *
+ * @return {Array} Array of nodes the same type as the original node
+ */
+treeDiffer.DomTreeNode.prototype.getOriginalNodeChildren = function () {
+	var i, ilen, childNode,
+		children = [],
+		childNodes = this.node.childNodes;
+
+	for ( i = 0, ilen = childNodes.length; i < ilen; i++ ) {
+		childNode = childNodes[ i ];
+		if ( !( childNode.nodeType === Node.TEXT_NODE && childNode.textContent.match( /^\s*$/ ) ) ) {
+			children.push( childNode );
+		}
+	}
+
+	return children;
+};
+
+/**
  * Find and display the diff between two HTML trees.
  */
 treeDiffer.showExampleDiff = function () {
-	var i, ilen, diff, tree1, tree2, tree1Root, tree2Root,
+	var i, ilen, diff, tree1, tree2,
 		root1 = document.getElementsByClassName( 'root1' )[ 0 ],
 		root2 = document.getElementsByClassName( 'root2' )[ 0 ],
 		root1Clone = root1.cloneNode( true ),
 		root2Clone = root2.cloneNode( true );
-
-	/**
-	 * Wrap arbitrary nodes in TreeNodes, recording parent-child relationships
-	 *
-	 * @param {Object} parentNode Node to wrap
-	 */
-	function wrapNodes( parentNode ) {
-		var i, ilen, childNode, childTreeNode,
-			childNodes = parentNode.node.childNodes;
-
-		for ( i = 0, ilen = childNodes.length; i < ilen; i++ ) {
-
-			childNode = childNodes[ i ];
-
-			// Ignore whitespace nodes
-			if ( !( childNode.nodeType === Node.TEXT_NODE && childNode.textContent.match( /^\s*$/ ) ) ) {
-
-				childTreeNode = new treeDiffer.TreeNode( childNodes[ i ] );
-				parentNode.addChild( childTreeNode );
-				wrapNodes( childTreeNode );
-
-			}
-		}
-	}
 
 	/**
 	 * Add class to the DOM element, or its parent if it is a text node
@@ -75,21 +90,18 @@ treeDiffer.showExampleDiff = function () {
 		treeNode.node.classList.add( className );
 	}
 
-	// Step 2.
-	tree1Root = new treeDiffer.TreeNode( root1 );
-	tree2Root = new treeDiffer.TreeNode( root2 );
-	wrapNodes( tree1Root );
-	wrapNodes( tree2Root );
+	// STEP 3
 
-	// Step 3.
-	tree1 = new treeDiffer.Tree( tree1Root );
-	tree2 = new treeDiffer.Tree( tree2Root );
+	tree1 = new treeDiffer.Tree( root1, treeDiffer.DomTreeNode );
+	tree2 = new treeDiffer.Tree( root2, treeDiffer.DomTreeNode );
 
-	// Step 4.
+	// STEP 4
+
 	diff = new treeDiffer.Differ( tree1, tree2 )
 		.transactions[ tree1.orderedNodes.length - 1 ][ tree2.orderedNodes.length - 1 ];
 
-	// Step 5.
+	// STEP 5
+
 	for ( i = 0, ilen = diff.length; i < ilen; i++ ) {
 		if ( diff[ i ][ 0 ] !== null && diff[ i ][ 1 ] !== null ) {
 			addClassToNode( tree1.orderedNodes[ diff[ i ][ 0 ] ], 'change' );
