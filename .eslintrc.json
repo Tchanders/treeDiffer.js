@@ -1,0 +1,16 @@
+{
+    "extends": "wikimedia",
+
+    "ecmaVersion": 5,
+    "env": {
+        "browser": true
+    },
+    "globals": {
+        "treeDiffer": false
+    },
+
+    "rules": {
+        "dot-notation": 0,
+		"wrap-iife": 0
+    }
+}
