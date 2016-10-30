@@ -15,15 +15,17 @@
  * @class
  * @constructor
  * @param {treeDiffer.TreeNode} node Root node of the tree
+ * @param {Function} nodeClass Concrete subclass of treeDiffer.TreeNode
+ * @param {Object} config Config options for nodeClass
  */
-treeDiffer.Tree = function ( node, nodeClass ) {
+treeDiffer.Tree = function ( node, nodeClass, config ) {
 
 	this.root = null;
 	this.nodeClass = nodeClass;
 	this.orderedNodes = [];
 	this.keyRoots = [];
 
-	this.findKeyRootsAndOrderedNodes( node );
+	this.findKeyRootsAndOrderedNodes( node, config );
 
 };
 
@@ -31,7 +33,7 @@ treeDiffer.Tree = function ( node, nodeClass ) {
  * Find the post-ordering of the tree nodes, the keyroots and the leftmost of each
  * node.
  */
-treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function ( node ) {
+treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function ( node, config ) {
 	var leftmost,
 		leftmostsToKeyRoots = {},
 		tree = this;
@@ -49,7 +51,7 @@ treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function ( node ) {
 			children = treeNode.getOriginalNodeChildren();
 
 		for ( i = 0, ilen = children.length; i < ilen; i++ ) {
-			childNode = new tree.nodeClass( children[ i ] );
+			childNode = new tree.nodeClass( children[ i ], config );
 			treeNode.addChild( childNode );
 			postOrderNodes( childNode, orderedNodes, leftmostsToKeyRoots );
 		}
@@ -68,7 +70,7 @@ treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function ( node ) {
 	}
 
 	// Store the nodes in order
-	this.root = new tree.nodeClass( node );
+	this.root = new tree.nodeClass( node, config );
 	this.orderedNodes = [];
 	postOrderNodes( this.root, this.orderedNodes, leftmostsToKeyRoots );
 
