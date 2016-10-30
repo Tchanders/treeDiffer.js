@@ -14,6 +14,7 @@
  *
  * @class
  * @constructor
+ *
  * @param {treeDiffer.TreeNode} node Root node of the tree
  * @param {Function} nodeClass Concrete subclass of treeDiffer.TreeNode
  * @param {Object} config Config options for nodeClass
@@ -32,6 +33,8 @@ treeDiffer.Tree = function ( node, nodeClass, config ) {
 /**
  * Find the post-ordering of the tree nodes, the keyroots and the leftmost of each
  * node.
+ *
+ * @param {Object} node Root node in original tree
  */
 treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function ( node, config ) {
 	var leftmost,
@@ -51,6 +54,7 @@ treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function ( node, config 
 			children = treeNode.getOriginalNodeChildren();
 
 		for ( i = 0, ilen = children.length; i < ilen; i++ ) {
+			// eslint-disable-next-line new-cap
 			childNode = new tree.nodeClass( children[ i ], config );
 			treeNode.addChild( childNode );
 			postOrderNodes( childNode, orderedNodes, leftmostsToKeyRoots );
@@ -70,6 +74,7 @@ treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function ( node, config 
 	}
 
 	// Store the nodes in order
+	// eslint-disable-next-line new-cap
 	this.root = new tree.nodeClass( node, config );
 	this.orderedNodes = [];
 	postOrderNodes( this.root, this.orderedNodes, leftmostsToKeyRoots );

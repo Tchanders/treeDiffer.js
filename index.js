@@ -19,7 +19,9 @@
  *
  * @class
  * @extends treeDiffer.TreeNode
+ *
  * @constructor
+ * @param {Node} node DOM node
  */
 treeDiffer.DomTreeNode = function ( node ) {
 	// Parent constructor

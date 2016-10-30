@@ -30,8 +30,8 @@ treeDiffer.Differ = function ( tree1, tree2 ) {
 
 	// Temporary, changing store of transactions
 	transactions = {
-		null: {
-			null: []
+		'null': {
+			'null': []
 		}
 	};
 
@@ -39,7 +39,7 @@ treeDiffer.Differ = function ( tree1, tree2 ) {
 	// transactions to get from the sub-tree rooted at node x (in tree1) to the sub-tree
 	// rooted at node y (in tree2).
 	this.transactions = {
-		null: {}
+		'null': {}
 	};
 
 	// All possible transactions
@@ -49,8 +49,8 @@ treeDiffer.Differ = function ( tree1, tree2 ) {
 	// Indices for each transaction, to avoid high performance cost of creating the
 	// transactions multiple times
 	this.transactionToIndex = {
-		null: {
-			null: 0
+		'null': {
+			'null': 0
 		}
 	};
 	transactionIndex += 1;
@@ -59,10 +59,10 @@ treeDiffer.Differ = function ( tree1, tree2 ) {
 	for ( i = 0, ilen = this.tree1.orderedNodes.length; i < ilen; i++ ) {
 
 		transactions[ i ] = {
-			null: []
+			'null': []
 		};
 		this.transactionToIndex[ i ] = {
-			null: transactionIndex
+			'null': transactionIndex
 		};
 		transactionIndex += 1;
 		this.indexToTransaction.push( [ i, null ] );
