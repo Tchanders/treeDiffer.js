@@ -12,61 +12,46 @@
 <body>
 
 	<h1>Tree differ example</h1>
-	<div class="outer-col">
-		<h2>Trees with no highlighting</h2>
-		<div class="col">
-			<div class="tree1">
-				<h3>Tree 1</h3>
-				<div class="root root1">A div containing some things
-					<ul>
-						<li>List item 1</li>
-					</ul>
-					<ul>
-						<li>List item 2</li>
-						<li>List item 3</li>
-						<li>List item 4</li>
-						<li>List item 5</li>
-						<li>List item 6</li>
-						<li>List item 8</li>
-						<li>List item 9</li>
-						<li>List item 10</li>
-					</ul>
-				</div>
-			</div>
+	<div class="col">
+		<div class="diff1 outer">
+			<h3>Tree 1 (diff)</h3>
 		</div>
-		<div class="col">
-			<div class="tree2 outer">
-				<h3>Tree 2</h3>
-				<div class="root root2">A div containing some things
-					<ol>
-						<li>List item 1</li>
-					</ol>
-					<ul>
-						<li>List item 2</li>
-						<li>List item 4</li>
-						<li>List item 5</li>
-						<li>List item 6</li>
-						<li>List item 7</li>
-						<li>List item 8</li>
-						<li>List item 9</li>
-						<li>Different list item 10</li>
-					</ul>
-				</div>
-			</div>
-		</div>
+		<textarea class="treeInput treeInput1">A div containing some things
+<ul>
+	<li>List item 1</li>
+</ul>
+<ul>
+	<li>List item 2</li>
+	<li>List item 3</li>
+	<li>List item 4</li>
+	<li>List item 5</li>
+	<li>List item 6</li>
+	<li>List item 8</li>
+	<li>List item 9</li>
+	<li>List item 10</li>
+</ul></textarea>
 	</div>
-	<div class="outer-col">
-		<h2>Trees with diff highlighted</h2>
-		<div class="col">
-			<div class="diff1 outer">
-				<h3>Tree 1 (diff)</h3>
-			</div>
+	<div class="col">
+		<div class="diff2 outer">
+			<h3>Tree 2 (diff)</h3>
 		</div>
-		<div class="col">
-			<div class="diff2 outer">
-				<h3>Tree 2 (diff)</h3>
-			</div>
-		</div>
+		<textarea class="treeInput treeInput2">A div containing some things
+<ol>
+	<li>List item 1</li>
+</ol>
+<ul>
+	<li>List item 2</li>
+	<li>List item 4</li>
+	<li>List item 5</li>
+	<li>List item 6</li>
+	<li>List item 7</li>
+	<li>List item 8</li>
+	<li>List item 9</li>
+	<li>Different list item 10</li>
+</ul></textarea>
+	</div>
+	<div class="updateWrapper">
+		<input type="button" value="Update" class="update" />
 	</div>
 
 	<script src="node_modules/oojs/dist/oojs.min.js"></script>

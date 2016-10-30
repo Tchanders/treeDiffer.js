@@ -72,10 +72,15 @@ treeDiffer.DomTreeNode.prototype.getOriginalNodeChildren = function () {
  */
 treeDiffer.showExampleDiff = function () {
 	var i, ilen, diff, tree1, tree2,
-		root1 = document.getElementsByClassName( 'root1' )[ 0 ],
-		root2 = document.getElementsByClassName( 'root2' )[ 0 ],
-		root1Clone = root1.cloneNode( true ),
-		root2Clone = root2.cloneNode( true );
+		treeInput1 = document.getElementsByClassName( 'treeInput1' )[ 0 ],
+		treeInput2 = document.getElementsByClassName( 'treeInput2' )[ 0 ],
+		diff1 = document.getElementsByClassName( 'diff1' )[ 0 ],
+		diff2 = document.getElementsByClassName( 'diff2' )[ 0 ],
+		root1 = document.createElement( 'div' ),
+		root2 = document.createElement( 'div' );
+
+	root1.innerHTML = treeInput1.value;
+	root2.innerHTML = treeInput2.value;
 
 	/**
 	 * Add class to the DOM element, or its parent if it is a text node
@@ -112,11 +117,15 @@ treeDiffer.showExampleDiff = function () {
 			addClassToNode( tree2.orderedNodes[ diff[ i ][ 1 ] ], 'insert' );
 		}
 	}
-	document.getElementsByClassName( 'diff1' )[ 0 ].appendChild( root1 );
-	document.getElementsByClassName( 'diff2' )[ 0 ].appendChild( root2 );
-	document.getElementsByClassName( 'tree1' )[ 0 ].appendChild( root1Clone );
-	document.getElementsByClassName( 'tree2' )[ 0 ].appendChild( root2Clone );
+	diff1.innerHTML = '';
+	diff2.innerHTML = '';
+	diff1.appendChild( root1 );
+	diff2.appendChild( root2 );
 
 };
 
 treeDiffer.showExampleDiff();
+
+document.getElementsByClassName( 'update' )[ 0 ].addEventListener( 'click', function () {
+	treeDiffer.showExampleDiff();
+} );

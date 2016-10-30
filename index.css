@@ -9,7 +9,6 @@ h1, h2, h3 {
 
 .col {
 	float: left;
-	height: 300px;
 	width: 40%;
 	padding: 2%;
 	margin: 2%;
@@ -30,4 +29,13 @@ h1, h2, h3 {
 .change {
 	background-color: #aaf;
 	border-radius: 3px;
+}
+
+.treeInput {
+	width: 100%;
+	height: 30em;
+}
+
+.updateWrapper {
+	text-align: center;
 }
