@@ -32,10 +32,10 @@ module.exports = function ( grunt ) {
 			dist: {
 				files: {
 					'dist/treeDiffer-dist.js': [
-						'treeDiffer.js',
-						'treeDiffer.TreeNode.js',
-						'treeDiffer.Tree.js',
-						'treeDiffer.Differ.js'
+						'src/treeDiffer.js',
+						'src/treeDiffer.TreeNode.js',
+						'src/treeDiffer.Tree.js',
+						'src/treeDiffer.Differ.js'
 					]
 				}
 			}
