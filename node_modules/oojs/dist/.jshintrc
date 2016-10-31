@@ -1,6 +1,0 @@
-{
-	"undef": false,
-	"unused": false,
-
-	"extends": "../.jshintrc"
-}

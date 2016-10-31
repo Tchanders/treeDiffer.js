@@ -35,6 +35,7 @@ treeDiffer.Tree = function ( node, nodeClass, config ) {
  * node.
  *
  * @param {Object} node Root node in original tree
+ * @param {Object} config Config options for nodeClass
  */
 treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function ( node, config ) {
 	var leftmost,
