@@ -93,11 +93,11 @@ treeDiffer.showExampleDiff = function () {
 	function addClassToNode( node, className ) {
 		var span;
 		if ( node.nodeType === Node.TEXT_NODE ) {
-			// Wrap text node in span:
+			// Wrap text node in span
 			span = document.createElement( 'span' );
 			// Insert span adjacent to text node
 			node.parentNode.insertBefore( span, node );
-			// then move text node inside span
+			// Move text node inside span
 			span.appendChild( node );
 			node = span;
 		}
