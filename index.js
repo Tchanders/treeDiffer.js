@@ -85,16 +85,23 @@ treeDiffer.showExampleDiff = function () {
 	root2.innerHTML = treeInput2.value;
 
 	/**
-	 * Add class to the DOM element, or its parent if it is a text node
+	 * Add class to the DOM element, or wrapper span if it is a text node
 	 *
-	 * @param {treeDiffer.TreeNode} treeNode Node that has been removed, inserted or changed
+	 * @param {Node} node DOM node that has been removed, inserted or changed
 	 * @param {string} className Class to add
 	 */
-	function addClassToNode( treeNode, className ) {
-		if ( treeNode.node.nodeType === Node.TEXT_NODE ) {
-			treeNode = treeNode.parent;
+	function addClassToNode( node, className ) {
+		var span;
+		if ( node.nodeType === Node.TEXT_NODE ) {
+			// Wrap text node in span:
+			span = document.createElement( 'span' );
+			// Insert span adjacent to text node
+			node.parentNode.insertBefore( span, node );
+			// then move text node inside span
+			span.appendChild( node );
+			node = span;
 		}
-		treeNode.node.classList.add( className );
+		node.classList.add( className );
 	}
 
 	// STEP 3
@@ -111,12 +118,12 @@ treeDiffer.showExampleDiff = function () {
 
 	for ( i = 0, ilen = diff.length; i < ilen; i++ ) {
 		if ( diff[ i ][ 0 ] !== null && diff[ i ][ 1 ] !== null ) {
-			addClassToNode( tree1.orderedNodes[ diff[ i ][ 0 ] ], 'change' );
-			addClassToNode( tree2.orderedNodes[ diff[ i ][ 1 ] ], 'change' );
+			addClassToNode( tree1.orderedNodes[ diff[ i ][ 0 ] ].node, 'change' );
+			addClassToNode( tree2.orderedNodes[ diff[ i ][ 1 ] ].node, 'change' );
 		} else if ( diff[ i ][ 0 ] ) {
-			addClassToNode( tree1.orderedNodes[ diff[ i ][ 0 ] ], 'remove' );
+			addClassToNode( tree1.orderedNodes[ diff[ i ][ 0 ] ].node, 'remove' );
 		} else if ( diff[ i ][ 1 ] ) {
-			addClassToNode( tree2.orderedNodes[ diff[ i ][ 1 ] ], 'insert' );
+			addClassToNode( tree2.orderedNodes[ diff[ i ][ 1 ] ].node, 'insert' );
 		}
 	}
 	diff1.innerHTML = '';
