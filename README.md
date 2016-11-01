@@ -7,6 +7,8 @@ treeDiffer finds the minimum transactions to get from the first tree to the seco
 * `[null, 2]` indicates that node 2 was inserted into the second tree
 * `[3, 4]` indicates that node 3 in the first tree was changed into node 4 in the second tree
 
+The only allowed transactions are insert, remove and change; a move would be captured by a remove and an insert. See the above paper for more details. 
+
 ## Usage
 
 Trees can be made of any type of node, as long as the nodes are connected in a [tree structure](https://en.wikipedia.org/wiki/Tree_%28data_structure%29).
