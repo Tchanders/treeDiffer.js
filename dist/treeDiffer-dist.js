@@ -173,6 +173,10 @@ treeDiffer.Tree.prototype.getNodeDescendants = function ( node ) {
  * Released under the MIT license
  */
 
+// eslint-disable dot-notation
+// We use [ 'null' ] as an index, but for consistencty with
+// variable indicies [ i ][ j ] we prefer not to use dot notation
+
 /**
  * Differ
  *

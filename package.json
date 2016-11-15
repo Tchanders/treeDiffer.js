@@ -3,7 +3,7 @@
     "oojs": "^1.1.10"
   },
   "devDependencies": {
-    "eslint-config-wikimedia": "0.2.0",
+    "eslint-config-wikimedia": "0.3.0",
     "grunt": "1.0.1",
     "grunt-contrib-concat": "1.0.1",
     "grunt-contrib-copy": "1.0.0",
