@@ -293,7 +293,7 @@ treeDiffer.Differ.prototype.getCorrespondingNodes = function ( transactions, old
 	remove.sort( function ( a, b ) { return a - b; } );
 	insert.sort( function ( a, b ) { return a - b; } );
 
-	for ( i = 0, j = 0; i < ilen, j < jlen; i++, j++ ) {
+	for ( i = 0, j = 0; i < ilen && j < jlen; i++, j++ ) {
 		if ( i === remove[ 0 ] ) {
 			// Old node is a remove
 			remove.shift();
