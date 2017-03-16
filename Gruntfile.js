@@ -7,15 +7,7 @@ module.exports = function ( grunt ) {
 
 	grunt.initConfig( {
 		eslint: {
-			fix: {
-				options: {
-					fix: true
-				},
-				src: [
-					'<%= eslint.main %>'
-				]
-			},
-			main: [
+			all: [
 				'**/*.js',
 				'!node_modules/**',
 				'!dist/**'
@@ -50,7 +42,7 @@ module.exports = function ( grunt ) {
 	} );
 
 	grunt.registerTask( 'build', [ 'concat', 'copy' ] );
-	grunt.registerTask( 'lint', [ 'eslint:main', 'jsonlint' ] );
+	grunt.registerTask( 'lint', [ 'eslint', 'jsonlint' ] );
 	grunt.registerTask( 'fix', 'eslint:fix' );
 	grunt.registerTask( 'default', [ 'lint', 'build' ] );
 };
