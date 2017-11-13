@@ -1,4 +1,6 @@
 {
+  "name": "treeDiffer.js",
+  "version": "1.0.0",
   "dependencies": {
     "oojs": "^1.1.10"
   },
