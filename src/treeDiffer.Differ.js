@@ -131,6 +131,7 @@ treeDiffer.Differ.prototype.populateTransactions = function ( transactions ) {
 			this.findMinimumTransactions( keyRoot1, keyRoot2, iNulls, jNulls, transactions );
 
 			if ( new Date().getTime() > this.endTime ) {
+				this.transactions = null;
 				return;
 			}
 		}
