@@ -199,7 +199,7 @@ treeDiffer.Tree.prototype.getNodeDescendants = function ( node ) {
  * Released under the MIT license
  */
 
-// eslint-disable dot-notation
+/* eslint-disable dot-notation */
 // We use [ 'null' ] as an index, but for consistencty with
 // variable indicies [ i ][ j ] we prefer not to use dot notation
 
@@ -215,7 +215,7 @@ treeDiffer.Tree.prototype.getNodeDescendants = function ( node ) {
  * @constructor
  * @param {treeDiffer.Tree} tree1 First tree
  * @param {treeDiffer.Tree} tree2 Second tree
- * @param {Number} [timeout=1000] Timeout after which to stop diffing
+ * @param {number} [timeout=1000] Timeout after which to stop diffing
  */
 treeDiffer.Differ = function ( tree1, tree2, timeout ) {
 	var i, ilen, j, jlen, transactions,
@@ -232,8 +232,8 @@ treeDiffer.Differ = function ( tree1, tree2, timeout ) {
 
 	// Temporary, changing store of transactions
 	transactions = {
-		'null': {
-			'null': []
+		null: {
+			null: []
 		}
 	};
 
@@ -241,7 +241,7 @@ treeDiffer.Differ = function ( tree1, tree2, timeout ) {
 	// transactions to get from the sub-tree rooted at node x (in tree1) to the sub-tree
 	// rooted at node y (in tree2).
 	this.transactions = {
-		'null': {}
+		null: {}
 	};
 
 	// All possible transactions
@@ -251,8 +251,8 @@ treeDiffer.Differ = function ( tree1, tree2, timeout ) {
 	// Indices for each transaction, to avoid high performance cost of creating the
 	// transactions multiple times
 	this.transactionToIndex = {
-		'null': {
-			'null': 0
+		null: {
+			null: 0
 		}
 	};
 	transactionIndex += 1;
@@ -261,10 +261,10 @@ treeDiffer.Differ = function ( tree1, tree2, timeout ) {
 	for ( i = 0, ilen = this.tree1.orderedNodes.length; i < ilen; i++ ) {
 
 		transactions[ i ] = {
-			'null': []
+			null: []
 		};
 		this.transactionToIndex[ i ] = {
-			'null': transactionIndex
+			null: transactionIndex
 		};
 		transactionIndex += 1;
 		this.indexToTransaction.push( [ i, null ] );
@@ -497,8 +497,12 @@ treeDiffer.Differ.prototype.getCorrespondingNodes = function ( transactions, old
 	rem = remove.slice();
 	ins = insert.slice();
 
-	remove.sort( function ( a, b ) { return a - b; } );
-	insert.sort( function ( a, b ) { return a - b; } );
+	remove.sort( function ( a, b ) {
+		return a - b;
+	} );
+	insert.sort( function ( a, b ) {
+		return a - b;
+	} );
 
 	for ( i = 0, j = 0; i < ilen && j < jlen; i++, j++ ) {
 		if ( i === remove[ 0 ] ) {
