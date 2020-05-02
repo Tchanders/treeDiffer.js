@@ -7,4 +7,5 @@
  * Released under the MIT license
  */
 
+// eslint-disable-next-line no-undef
 window.treeDiffer = {};

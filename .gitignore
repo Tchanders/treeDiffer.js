@@ -10,6 +10,7 @@ sublime-*
 
 # Install and build artifacts
 node_modules
+.eslintcache
 
 # OS
 .DS_Store
