@@ -160,7 +160,7 @@ treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function ( node, config 
 	this.orderedNodes = [];
 	postOrderNodes( this.root, this.orderedNodes, leftmostsToKeyRoots );
 
-	// Store the the key roots in order of node index
+	// Store the key roots in order of node index
 	for ( leftmost in leftmostsToKeyRoots ) {
 		this.keyRoots.push( leftmostsToKeyRoots[ leftmost ] );
 	}
