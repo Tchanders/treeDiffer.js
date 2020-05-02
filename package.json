@@ -2,14 +2,13 @@
   "name": "treeDiffer.js",
   "version": "1.0.0",
   "dependencies": {
-    "oojs": "^1.1.10"
+    "oojs": "^4.0.0"
   },
   "devDependencies": {
-    "eslint-config-wikimedia": "0.4.0",
-    "grunt": "1.0.1",
+    "eslint-config-wikimedia": "0.15.3",
+    "grunt": "1.1.0",
     "grunt-contrib-concat": "1.0.1",
     "grunt-contrib-copy": "1.0.0",
-    "grunt-eslint": "19.0.0",
-    "grunt-jsonlint": "1.1.0"
+    "grunt-eslint": "22.0.0"
   }
 }

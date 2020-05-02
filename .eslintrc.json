@@ -1,9 +1,11 @@
 {
-	"extends": "wikimedia",
-	"env": {
-		"browser": true
-	},
+	"extends": [
+		"wikimedia/client"
+	],
 	"globals": {
-		"treeDiffer": true
+		"treeDiffer": "writeable"
+	},
+	"rules": {
+		"max-len": "off"
 	}
 }

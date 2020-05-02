@@ -3,19 +3,15 @@ module.exports = function ( grunt ) {
 	grunt.loadNpmTasks( 'grunt-contrib-concat' );
 	grunt.loadNpmTasks( 'grunt-contrib-copy' );
 	grunt.loadNpmTasks( 'grunt-eslint' );
-	grunt.loadNpmTasks( 'grunt-jsonlint' );
 
 	grunt.initConfig( {
 		eslint: {
+			options: {
+				extensions: [ '.js', '.json' ],
+				cache: true
+			},
 			all: [
-				'**/*.js',
-				'!node_modules/**',
-				'!dist/**'
-			]
-		},
-		jsonlint: {
-			all: [
-				'**/*.json',
+				'**/*.{js,json}',
 				'!node_modules/**',
 				'!dist/**'
 			]
@@ -42,7 +38,7 @@ module.exports = function ( grunt ) {
 	} );
 
 	grunt.registerTask( 'build', [ 'concat', 'copy' ] );
-	grunt.registerTask( 'lint', [ 'eslint', 'jsonlint' ] );
+	grunt.registerTask( 'lint', [ 'eslint' ] );
 	grunt.registerTask( 'fix', 'eslint:fix' );
 	grunt.registerTask( 'default', [ 'lint', 'build' ] );
 };
