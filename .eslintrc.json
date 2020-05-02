@@ -1,11 +1,5 @@
 {
 	"extends": [
-		"wikimedia/client"
-	],
-	"globals": {
-		"treeDiffer": "writeable"
-	},
-	"rules": {
-		"max-len": "off"
-	}
+		"wikimedia/server"
+	]
 }
