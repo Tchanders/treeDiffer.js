@@ -70,11 +70,10 @@ treeDiffer.TreeNode.prototype.addChild = function ( child ) {
 treeDiffer.TreeNode.prototype.isEqual = null;
 
 /**
- * @method
- *
  * Get the children of the node that this tree node wraps. How to
  * find and filter children will depend on the use case.
  *
+ * @method
  * @return {Object[]} Children of the wrapped node
  */
 treeDiffer.TreeNode.prototype.getOriginalNodeChildren = null;
