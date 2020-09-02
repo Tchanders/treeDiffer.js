@@ -182,7 +182,23 @@ treeDiffer.Differ.prototype.getNodeDistance = function ( node1, node2 ) {
  * @param {Object} transactions Temporary store of transactions between trees
  */
 treeDiffer.Differ.prototype.findMinimumTransactions = function ( keyRoot1, keyRoot2, iNulls, jNulls, transactions ) {
-	var i, j, iMinus1, jMinus1, costs, nodeDistance, transaction, remove, insert, change;
+	var i, j, iMinus1, jMinus1, nodeDistance, transaction, remove, insert, change;
+
+	function getLowestCost( removeCost, insertCost, changeCost ) {
+		// This used to be written as:
+		//  transaction = costs.indexOf( Math.min.apply( null, costs ) )
+		// but expanding into two simple comparison makes it much faster.
+		var minCost = removeCost,
+			index = 0;
+		if ( insertCost < minCost ) {
+			index = 1;
+			minCost = insertCost;
+		}
+		if ( changeCost < minCost ) {
+			index = 2;
+		}
+		return index;
+	}
 
 	for ( i = keyRoot1.leftmost; i < keyRoot1.index + 1; i++ ) {
 		iMinus1 = i === keyRoot1.leftmost ? null : i - 1;
@@ -200,13 +216,12 @@ treeDiffer.Differ.prototype.findMinimumTransactions = function ( keyRoot1, keyRo
 				nodeDistance = this.getNodeDistance( this.tree1.orderedNodes[ i ], this.tree2.orderedNodes[ j ] );
 
 				// Cost of each transaction
-				costs = [
+				transaction = getLowestCost(
 					remove.length + this.removeCost,
 					insert.length + this.insertCost,
 					change.length + nodeDistance
-				];
+				);
 
-				transaction = costs.indexOf( Math.min.apply( null, costs ) );
 				if ( transaction === 0 ) {
 					// Record a remove
 					( transactions[ i ][ j ] = remove.slice() ).push(
@@ -238,13 +253,11 @@ treeDiffer.Differ.prototype.findMinimumTransactions = function ( keyRoot1, keyRo
 					this.tree2.orderedNodes[ j ].leftmost - 1 < keyRoot2.leftmost ? null : this.tree2.orderedNodes[ j ].leftmost - 1
 				];
 
-				costs = [
+				transaction = getLowestCost(
 					remove.length + this.removeCost,
 					insert.length + this.insertCost,
 					change.length + this.transactions[ i ][ j ].length
-				];
-
-				transaction = costs.indexOf( Math.min.apply( null, costs ) );
+				);
 				if ( transaction === 0 ) {
 					// Record a remove
 					( transactions[ i ][ j ] = remove.slice() ).push(
