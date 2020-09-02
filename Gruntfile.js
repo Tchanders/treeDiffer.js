@@ -14,7 +14,8 @@ module.exports = function ( grunt ) {
 			all: [
 				'**/*.{js,json}',
 				'!node_modules/**',
-				'!dist/**'
+				'!dist/**',
+				'!demo/dist/**'
 			]
 		},
 		concat: {
