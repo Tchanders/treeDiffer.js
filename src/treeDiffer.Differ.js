@@ -187,7 +187,7 @@ treeDiffer.Differ.prototype.findMinimumTransactions = function ( keyRoot1, keyRo
 	function getLowestCost( removeCost, insertCost, changeCost ) {
 		// This used to be written as:
 		//  transaction = costs.indexOf( Math.min.apply( null, costs ) )
-		// but expanding into two simple comparison makes it much faster.
+		// but expanding into two simple comparisons makes it much faster.
 		var minCost = removeCost,
 			index = 0;
 		if ( insertCost < minCost ) {
