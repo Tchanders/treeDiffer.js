@@ -48,9 +48,8 @@ treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function ( node, config 
 	 *
 	 * @param {treeDiffer.TreeNode} treeNode Node currently being checked
 	 * @param {Array} orderedNodes Array to be populated with nodes in order
-	 * @param {Object} leftmostsToKeyRoots Each keyroot and its leftmost
 	 */
-	function postOrderNodes( treeNode, orderedNodes, leftmostsToKeyRoots ) {
+	function postOrderNodes( treeNode, orderedNodes ) {
 		var i, ilen, childNode,
 			children = treeNode.getOriginalNodeChildren();
 
@@ -58,7 +57,7 @@ treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function ( node, config 
 			// eslint-disable-next-line new-cap
 			childNode = new tree.nodeClass( children[ i ], config );
 			treeNode.addChild( childNode );
-			postOrderNodes( childNode, orderedNodes, leftmostsToKeyRoots );
+			postOrderNodes( childNode, orderedNodes );
 		}
 
 		// Record node order
@@ -78,7 +77,7 @@ treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function ( node, config 
 	// eslint-disable-next-line new-cap
 	this.root = new tree.nodeClass( node, config );
 	this.orderedNodes = [];
-	postOrderNodes( this.root, this.orderedNodes, leftmostsToKeyRoots );
+	postOrderNodes( this.root, this.orderedNodes );
 
 	// Store the key roots in order of node index
 	for ( leftmost in leftmostsToKeyRoots ) {
