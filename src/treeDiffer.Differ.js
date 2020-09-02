@@ -182,7 +182,8 @@ treeDiffer.Differ.prototype.getNodeDistance = function ( node1, node2 ) {
  * @param {Object} transactions Temporary store of transactions between trees
  */
 treeDiffer.Differ.prototype.findMinimumTransactions = function ( keyRoot1, keyRoot2, iNulls, jNulls, transactions ) {
-	var i, j, iMinus1, jMinus1, nodeDistance, transaction, remove, insert, change;
+	var i, j, iMinus1, jMinus1, nodeDistance, transaction, remove, insert, change,
+		orderedNode1, orderedNode2;
 
 	function getLowestCost( removeCost, insertCost, changeCost ) {
 		// This used to be written as:
@@ -202,18 +203,20 @@ treeDiffer.Differ.prototype.findMinimumTransactions = function ( keyRoot1, keyRo
 
 	for ( i = keyRoot1.leftmost; i < keyRoot1.index + 1; i++ ) {
 		iMinus1 = i === keyRoot1.leftmost ? null : i - 1;
+		orderedNode1 = this.tree1.orderedNodes[ i ];
 
 		for ( j = keyRoot2.leftmost; j < keyRoot2.index + 1; j++ ) {
 			jMinus1 = j === keyRoot2.leftmost ? null : j - 1;
+			orderedNode2 = this.tree2.orderedNodes[ j ];
 
-			if ( this.tree1.orderedNodes[ i ].leftmost === keyRoot1.leftmost && this.tree2.orderedNodes[ j ].leftmost === keyRoot2.leftmost ) {
+			if ( orderedNode1.leftmost === keyRoot1.leftmost && orderedNode2.leftmost === keyRoot2.leftmost ) {
 
 				// Previous transactions, leading up to a remove, insert or change
 				remove = transactions[ iMinus1 ][ j ];
 				insert = transactions[ i ][ jMinus1 ];
 				change = transactions[ iMinus1 ][ jMinus1 ];
 
-				nodeDistance = this.getNodeDistance( this.tree1.orderedNodes[ i ], this.tree2.orderedNodes[ j ] );
+				nodeDistance = this.getNodeDistance( orderedNode1, orderedNode2 );
 
 				// Cost of each transaction
 				transaction = getLowestCost(
@@ -248,9 +251,9 @@ treeDiffer.Differ.prototype.findMinimumTransactions = function ( keyRoot1, keyRo
 				remove = transactions[ iMinus1 ][ j ];
 				insert = transactions[ i ][ jMinus1 ];
 				change = transactions[
-					this.tree1.orderedNodes[ i ].leftmost - 1 < keyRoot1.leftmost ? null : this.tree1.orderedNodes[ i ].leftmost - 1
+					orderedNode1.leftmost - 1 < keyRoot1.leftmost ? null : orderedNode1.leftmost - 1
 				][
-					this.tree2.orderedNodes[ j ].leftmost - 1 < keyRoot2.leftmost ? null : this.tree2.orderedNodes[ j ].leftmost - 1
+					orderedNode2.leftmost - 1 < keyRoot2.leftmost ? null : orderedNode2.leftmost - 1
 				];
 
 				transaction = getLowestCost(
