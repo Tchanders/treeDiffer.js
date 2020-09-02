@@ -128,7 +128,7 @@ treeDiffer.Differ.prototype.populateTransactions = function ( transactions ) {
 			}
 
 			// Get the diff
-			this.findMinimumTransactions( keyRoot1, keyRoot2, iNulls, jNulls, transactions );
+			this.findMinimumTransactions( keyRoot1, keyRoot2, transactions );
 
 			if ( new Date().getTime() > this.endTime ) {
 				this.transactions = null;
@@ -177,11 +177,9 @@ treeDiffer.Differ.prototype.getNodeDistance = function ( node1, node2 ) {
  *
  * @param {treeDiffer.TreeNode} keyRoot1 A keyroot from the first tree
  * @param {treeDiffer.TreeNode} keyRoot2 A keyroot from the second tree
- * @param {Object} iNulls Transactions from all relevant sub-trees to the null tree
- * @param {Object} jNulls Transactions from the null tree to all relevant sub-trees
  * @param {Object} transactions Temporary store of transactions between trees
  */
-treeDiffer.Differ.prototype.findMinimumTransactions = function ( keyRoot1, keyRoot2, iNulls, jNulls, transactions ) {
+treeDiffer.Differ.prototype.findMinimumTransactions = function ( keyRoot1, keyRoot2, transactions ) {
 	var i, j, iMinus1, jMinus1, nodeDistance, transaction, remove, insert, change,
 		orderedNode1, orderedNode2;
 
