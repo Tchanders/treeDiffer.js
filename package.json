@@ -1,6 +1,10 @@
 {
 	"name": "treeDiffer.js",
 	"version": "1.0.0",
+	"scripts": {
+		"build": "grunt build",
+		"test": "grunt lint"
+	},
 	"dependencies": {
 		"oojs": "^5.0.0"
 	},
