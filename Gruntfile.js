@@ -14,7 +14,8 @@ module.exports = function ( grunt ) {
 			all: [
 				'**/*.{js,json}',
 				'!node_modules/**',
-				'!dist/**'
+				'!dist/**',
+				'!demo/dist/**'
 			]
 		},
 		concat: {
@@ -32,7 +33,8 @@ module.exports = function ( grunt ) {
 		copy: {
 			dist: {
 				files: {
-					'dist/oojs.min.js': 'node_modules/oojs/dist/oojs.min.js'
+					'dist/oojs.min.js': 'node_modules/oojs/dist/oojs.min.js',
+					'demo/': 'dist/*'
 				}
 			}
 		}
