@@ -220,7 +220,7 @@ treeDiffer.Differ = function ( tree1, tree2, timeout ) {
 	var i, ilen, j, jlen, transactions,
 		transactionIndex = 0;
 
-	this.endTime = Date.now() + ( timeout || 1000 );
+	this.endTime = new Date().getTime() + ( timeout || 1000 );
 
 	this.tree1 = tree1;
 	this.tree2 = tree2;
@@ -324,7 +324,7 @@ treeDiffer.Differ.prototype.populateTransactions = function ( transactions ) {
 			// Get the diff
 			this.findMinimumTransactions( keyRoot1, keyRoot2, transactions );
 
-			if ( Date.now() > this.endTime ) {
+			if ( new Date().getTime() > this.endTime ) {
 				this.transactions = null;
 				return;
 			}
