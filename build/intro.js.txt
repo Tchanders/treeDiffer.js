@@ -1,7 +1,7 @@
 /*!
  * treeDiffer.js
  *
- * Version 1.1.0
+ * Version 1.1.1
  * https://github.com/Tchanders/treeDiffer.js
  *
  * Released under the MIT license
