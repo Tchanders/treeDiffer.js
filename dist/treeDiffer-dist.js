@@ -1,4 +1,16 @@
 /*!
+ * treeDiffer.js
+ *
+ * Version 1.1.0
+ * https://github.com/Tchanders/treeDiffer.js
+ *
+ * Released under the MIT license
+ */
+( function ( global ) {
+
+'use strict';
+
+/*!
  * treeDiffer Namespace for treeDiffer.js
  *
  * Version 1.0.2
@@ -548,3 +560,14 @@ treeDiffer.Differ.prototype.getCorrespondingNodes = function ( transactions, old
 		change: change
 	};
 };
+
+// eslint-disable-next-line strict
+if ( typeof module !== 'undefined' && module.exports ) {
+	module.exports = treeDiffer;
+} else {
+	global.treeDiffer = treeDiffer;
+}
+
+}( this ) );
+
+//# sourceMappingURL=treeDiffer-dist.js.map
