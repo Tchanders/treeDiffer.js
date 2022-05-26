@@ -1,0 +1,11 @@
+/*!
+ * treeDiffer.js
+ *
+ * Version 1.1.0
+ * https://github.com/Tchanders/treeDiffer.js
+ *
+ * Released under the MIT license
+ */
+( function ( global ) {
+
+'use strict';

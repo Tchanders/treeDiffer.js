@@ -1,6 +1,7 @@
 'use strict';
 
 module.exports = function ( grunt ) {
+	grunt.loadNpmTasks( 'grunt-contrib-clean' );
 	grunt.loadNpmTasks( 'grunt-contrib-concat' );
 	grunt.loadNpmTasks( 'grunt-contrib-copy' );
 	grunt.loadNpmTasks( 'grunt-eslint' );
@@ -17,14 +18,23 @@ module.exports = function ( grunt ) {
 		stylelint: {
 			all: '**/*.{css,less}'
 		},
+		clean: {
+			dist: [ 'dist', 'demo/dist' ]
+		},
 		concat: {
+			options: {
+				sourceMap: true
+			},
 			dist: {
 				files: {
 					'dist/treeDiffer-dist.js': [
+						'build/intro.js.txt',
 						'src/treeDiffer.js',
 						'src/treeDiffer.TreeNode.js',
 						'src/treeDiffer.Tree.js',
-						'src/treeDiffer.Differ.js'
+						'src/treeDiffer.Differ.js',
+						'build/export.js',
+						'build/outro.js.txt'
 					]
 				}
 			}
@@ -32,14 +42,14 @@ module.exports = function ( grunt ) {
 		copy: {
 			dist: {
 				files: {
-					'dist/oojs.min.js': 'node_modules/oojs/dist/oojs.min.js',
-					'demo/': 'dist/*'
+					'demo/': 'dist/*',
+					'demo/dist/oojs.min.js': 'node_modules/oojs/dist/oojs.min.js'
 				}
 			}
 		}
 	} );
 
-	grunt.registerTask( 'build', [ 'concat', 'copy' ] );
+	grunt.registerTask( 'build', [ 'clean', 'concat', 'copy' ] );
 	grunt.registerTask( 'lint', [ 'eslint', 'stylelint' ] );
 	grunt.registerTask( 'fix', 'eslint:fix' );
 	grunt.registerTask( 'default', [ 'lint', 'build' ] );
