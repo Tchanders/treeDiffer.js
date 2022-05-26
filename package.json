@@ -5,9 +5,6 @@
 		"build": "grunt build",
 		"test": "grunt lint"
 	},
-	"dependencies": {
-		"oojs": "^6.0.0"
-	},
 	"devDependencies": {
 		"eslint-config-wikimedia": "0.22.1",
 		"grunt": "1.5.3",
@@ -15,6 +12,7 @@
 		"grunt-contrib-copy": "1.0.0",
 		"grunt-eslint": "24.0.0",
 		"grunt-stylelint": "0.18.0",
+		"oojs": "^6.0.0",
 		"stylelint-config-wikimedia": "0.13.0"
 	}
 }
