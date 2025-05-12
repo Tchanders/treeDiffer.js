@@ -38,8 +38,7 @@ treeDiffer.Tree = function ( node, nodeClass, config ) {
  * @param {Object} config Config options for nodeClass
  */
 treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function ( node, config ) {
-	var leftmost,
-		leftmostsToKeyRoots = {},
+	const leftmostsToKeyRoots = {},
 		tree = this;
 
 	/**
@@ -50,12 +49,11 @@ treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function ( node, config 
 	 * @param {Array} orderedNodes Array to be populated with nodes in order
 	 */
 	function postOrderNodes( treeNode, orderedNodes ) {
-		var i, ilen, childNode,
-			children = treeNode.getOriginalNodeChildren();
+		const children = treeNode.getOriginalNodeChildren();
 
-		for ( i = 0, ilen = children.length; i < ilen; i++ ) {
+		for ( let i = 0, ilen = children.length; i < ilen; i++ ) {
 			// eslint-disable-next-line new-cap
-			childNode = new tree.nodeClass( children[ i ], config );
+			const childNode = new tree.nodeClass( children[ i ], config );
 			treeNode.addChild( childNode );
 			postOrderNodes( childNode, orderedNodes );
 		}
@@ -80,12 +78,10 @@ treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function ( node, config 
 	postOrderNodes( this.root, this.orderedNodes );
 
 	// Store the key roots in order of node index
-	for ( leftmost in leftmostsToKeyRoots ) {
+	for ( const leftmost in leftmostsToKeyRoots ) {
 		this.keyRoots.push( leftmostsToKeyRoots[ leftmost ] );
 	}
-	this.keyRoots.sort( function ( a, b ) {
-		return a - b;
-	} );
+	this.keyRoots.sort( ( a, b ) => a - b );
 
 };
 
@@ -96,12 +92,11 @@ treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function ( node, config 
  * @return {Array} Descendants of the node
  */
 treeDiffer.Tree.prototype.getNodeDescendants = function ( node ) {
-	var descendants = [];
+	const descendants = [];
 
 	function addDescendants( parentNode ) {
-		var i, ilen, childNode;
-		for ( i = 0, ilen = parentNode.children.length; i < ilen; i++ ) {
-			childNode = parentNode.children[ i ];
+		for ( let i = 0, ilen = parentNode.children.length; i < ilen; i++ ) {
+			const childNode = parentNode.children[ i ];
 			descendants.push( childNode );
 			addDescendants( childNode );
 		}

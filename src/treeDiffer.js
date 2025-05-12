@@ -7,5 +7,5 @@
  * Released under the MIT license
  */
 
-// eslint-disable-next-line no-undef
-window.treeDiffer = {};
+// eslint-disable-next-line no-redeclare, no-unused-vars
+const treeDiffer = {};
