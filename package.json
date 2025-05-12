@@ -12,14 +12,14 @@
 		"LICENSE.txt"
 	],
 	"devDependencies": {
-		"eslint-config-wikimedia": "0.22.1",
-		"grunt": "1.5.3",
+		"eslint-config-wikimedia": "0.29.1",
+		"grunt": "1.6.1",
 		"grunt-contrib-clean": "^2.0.1",
 		"grunt-contrib-concat": "2.1.0",
 		"grunt-contrib-copy": "1.0.0",
-		"grunt-eslint": "24.0.0",
-		"grunt-stylelint": "0.18.0",
+		"grunt-eslint": "24.3.0",
+		"grunt-stylelint": "0.20.1",
 		"oojs": "^6.0.0",
-		"stylelint-config-wikimedia": "0.13.0"
+		"stylelint-config-wikimedia": "0.18.0"
 	}
 }
