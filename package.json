@@ -3,7 +3,7 @@
 	"version": "1.1.0",
 	"scripts": {
 		"build": "grunt build",
-		"test": "grunt lint"
+		"test": "npm run build && grunt lint && karma start"
 	},
 	"main": "dist/treeDiffer-dist.js",
 	"files": [
@@ -14,12 +14,16 @@
 	"devDependencies": {
 		"eslint-config-wikimedia": "0.29.1",
 		"grunt": "1.6.1",
-		"grunt-contrib-clean": "^2.0.1",
+		"grunt-contrib-clean": "2.0.1",
 		"grunt-contrib-concat": "2.1.0",
 		"grunt-contrib-copy": "1.0.0",
 		"grunt-eslint": "24.3.0",
 		"grunt-stylelint": "0.20.1",
-		"oojs": "^6.0.0",
+		"karma": "6.4.4",
+		"karma-chrome-launcher": "3.2.0",
+		"karma-qunit": "4.2.1",
+		"oojs": "7.0.1",
+		"qunit": "2.24.1",
 		"stylelint-config-wikimedia": "0.18.0"
 	}
 }
