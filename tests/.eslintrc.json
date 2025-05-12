@@ -1,0 +1,14 @@
+{
+	"root": true,
+	"extends": [
+		"wikimedia/client",
+		"wikimedia/qunit"
+	],
+	"globals": {
+		"treeDiffer": "readonly",
+		"OO": "readonly"
+	},
+	"rules": {
+		"no-implicit-globals": "off"
+	}
+}
