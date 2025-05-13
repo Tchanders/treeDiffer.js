@@ -1,7 +1,7 @@
 /*!
  * treeDiffer.js
  *
- * Version 1.1.0
+ * Version 1.1.1
  * https://github.com/Tchanders/treeDiffer.js
  *
  * Released under the MIT license
@@ -13,14 +13,11 @@
 /*!
  * treeDiffer Namespace for treeDiffer.js
  *
- * Version 1.0.2
- * https://github.com/Tchanders/treeDiffer.js
- *
  * Released under the MIT license
  */
 
-// eslint-disable-next-line no-undef
-window.treeDiffer = {};
+// eslint-disable-next-line no-redeclare, no-unused-vars
+const treeDiffer = {};
 
 /*!
  * treeDiffer.TreeNode
@@ -130,8 +127,7 @@ treeDiffer.Tree = function ( node, nodeClass, config ) {
  * @param {Object} config Config options for nodeClass
  */
 treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function ( node, config ) {
-	var leftmost,
-		leftmostsToKeyRoots = {},
+	const leftmostsToKeyRoots = {},
 		tree = this;
 
 	/**
@@ -142,12 +138,11 @@ treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function ( node, config 
 	 * @param {Array} orderedNodes Array to be populated with nodes in order
 	 */
 	function postOrderNodes( treeNode, orderedNodes ) {
-		var i, ilen, childNode,
-			children = treeNode.getOriginalNodeChildren();
+		const children = treeNode.getOriginalNodeChildren();
 
-		for ( i = 0, ilen = children.length; i < ilen; i++ ) {
+		for ( let i = 0, ilen = children.length; i < ilen; i++ ) {
 			// eslint-disable-next-line new-cap
-			childNode = new tree.nodeClass( children[ i ], config );
+			const childNode = new tree.nodeClass( children[ i ], config );
 			treeNode.addChild( childNode );
 			postOrderNodes( childNode, orderedNodes );
 		}
@@ -172,12 +167,10 @@ treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function ( node, config 
 	postOrderNodes( this.root, this.orderedNodes );
 
 	// Store the key roots in order of node index
-	for ( leftmost in leftmostsToKeyRoots ) {
+	for ( const leftmost in leftmostsToKeyRoots ) {
 		this.keyRoots.push( leftmostsToKeyRoots[ leftmost ] );
 	}
-	this.keyRoots.sort( function ( a, b ) {
-		return a - b;
-	} );
+	this.keyRoots.sort( ( a, b ) => a - b );
 
 };
 
@@ -188,12 +181,11 @@ treeDiffer.Tree.prototype.findKeyRootsAndOrderedNodes = function ( node, config 
  * @return {Array} Descendants of the node
  */
 treeDiffer.Tree.prototype.getNodeDescendants = function ( node ) {
-	var descendants = [];
+	const descendants = [];
 
 	function addDescendants( parentNode ) {
-		var i, ilen, childNode;
-		for ( i = 0, ilen = parentNode.children.length; i < ilen; i++ ) {
-			childNode = parentNode.children[ i ];
+		for ( let i = 0, ilen = parentNode.children.length; i < ilen; i++ ) {
+			const childNode = parentNode.children[ i ];
 			descendants.push( childNode );
 			addDescendants( childNode );
 		}
@@ -229,8 +221,6 @@ treeDiffer.Tree.prototype.getNodeDescendants = function ( node ) {
  * @param {number} [timeout=1000] Timeout after which to stop diffing
  */
 treeDiffer.Differ = function ( tree1, tree2, timeout ) {
-	var i, ilen, j, jlen, transactions,
-		transactionIndex = 0;
 
 	this.endTime = Date.now() + ( timeout || 1000 );
 
@@ -242,7 +232,7 @@ treeDiffer.Differ = function ( tree1, tree2, timeout ) {
 	this.changeCost = 1;
 
 	// Temporary, changing store of transactions
-	transactions = {
+	const transactions = {
 		null: {
 			null: []
 		}
@@ -259,6 +249,7 @@ treeDiffer.Differ = function ( tree1, tree2, timeout ) {
 	this.indexToTransaction = [];
 	this.indexToTransaction.push( [ null, null ] );
 
+	let transactionIndex = 0;
 	// Indices for each transaction, to avoid high performance cost of creating the
 	// transactions multiple times
 	this.transactionToIndex = {
@@ -269,7 +260,7 @@ treeDiffer.Differ = function ( tree1, tree2, timeout ) {
 	transactionIndex += 1;
 
 	// Populate transaction stores
-	for ( i = 0, ilen = this.tree1.orderedNodes.length; i < ilen; i++ ) {
+	for ( let i = 0, ilen = this.tree1.orderedNodes.length; i < ilen; i++ ) {
 
 		transactions[ i ] = {
 			null: []
@@ -280,7 +271,7 @@ treeDiffer.Differ = function ( tree1, tree2, timeout ) {
 		transactionIndex += 1;
 		this.indexToTransaction.push( [ i, null ] );
 
-		for ( j = 0, jlen = this.tree2.orderedNodes.length; j < jlen; j++ ) {
+		for ( let j = 0, jlen = this.tree2.orderedNodes.length; j < jlen; j++ ) {
 			transactions[ null ][ j ] = [];
 			transactions[ i ][ j ] = [];
 
@@ -306,29 +297,28 @@ treeDiffer.Differ = function ( tree1, tree2, timeout ) {
  * @param {Object} transactions Temporary store of transactions between trees
  */
 treeDiffer.Differ.prototype.populateTransactions = function ( transactions ) {
-	var i, ilen, j, jlen, iNulls, jNulls, ii, jj, keyRoot1, keyRoot2,
-		differ = this;
+	const differ = this;
 
 	function getTransactionFromIndex( index ) {
 		return differ.indexToTransaction[ index ];
 	}
 
-	for ( i = 0, ilen = this.tree1.keyRoots.length; i < ilen; i++ ) {
+	for ( let i = 0, ilen = this.tree1.keyRoots.length; i < ilen; i++ ) {
 
 		// Make transactions for tree -> null
-		keyRoot1 = this.tree1.orderedNodes[ this.tree1.keyRoots[ i ] ];
-		iNulls = [];
-		for ( ii = keyRoot1.leftmost; ii < keyRoot1.index + 1; ii++ ) {
+		const keyRoot1 = this.tree1.orderedNodes[ this.tree1.keyRoots[ i ] ];
+		const iNulls = [];
+		for ( let ii = keyRoot1.leftmost; ii < keyRoot1.index + 1; ii++ ) {
 			iNulls.push( this.transactionToIndex[ ii ][ null ] );
 			transactions[ ii ][ null ] = iNulls.slice();
 		}
 
-		for ( j = 0, jlen = this.tree2.keyRoots.length; j < jlen; j++ ) {
+		for ( let j = 0, jlen = this.tree2.keyRoots.length; j < jlen; j++ ) {
 
 			// Make transactions of null -> tree
-			keyRoot2 = this.tree2.orderedNodes[ this.tree2.keyRoots[ j ] ];
-			jNulls = [];
-			for ( jj = keyRoot2.leftmost; jj < keyRoot2.index + 1; jj++ ) {
+			const keyRoot2 = this.tree2.orderedNodes[ this.tree2.keyRoots[ j ] ];
+			const jNulls = [];
+			for ( let jj = keyRoot2.leftmost; jj < keyRoot2.index + 1; jj++ ) {
 				jNulls.push( this.transactionToIndex[ null ][ jj ] );
 				transactions[ null ][ jj ] = jNulls.slice();
 			}
@@ -343,8 +333,8 @@ treeDiffer.Differ.prototype.populateTransactions = function ( transactions ) {
 		}
 	}
 
-	for ( i = 0, ilen = this.tree1.orderedNodes.length; i < ilen; i++ ) {
-		for ( j = 0, jlen = this.tree2.orderedNodes.length; j < jlen; j++ ) {
+	for ( let i = 0, ilen = this.tree1.orderedNodes.length; i < ilen; i++ ) {
+		for ( let j = 0, jlen = this.tree2.orderedNodes.length; j < jlen; j++ ) {
 			if ( this.transactions[ i ][ j ] && this.transactions[ i ][ j ].length > 0 ) {
 				this.transactions[ i ][ j ] = this.transactions[ i ][ j ].map( getTransactionFromIndex );
 			}
@@ -386,14 +376,11 @@ treeDiffer.Differ.prototype.getNodeDistance = function ( node1, node2 ) {
  * @param {Object} transactions Temporary store of transactions between trees
  */
 treeDiffer.Differ.prototype.findMinimumTransactions = function ( keyRoot1, keyRoot2, transactions ) {
-	var i, j, iMinus1, jMinus1, nodeDistance, transaction, remove, insert, change,
-		orderedNode1, orderedNode2;
-
 	function getLowestCost( removeCost, insertCost, changeCost ) {
 		// This used to be written as:
 		//  transaction = costs.indexOf( Math.min.apply( null, costs ) )
 		// but expanding into two simple comparisons makes it much faster.
-		var minCost = removeCost,
+		let minCost = removeCost,
 			index = 0;
 		if ( insertCost < minCost ) {
 			index = 1;
@@ -405,25 +392,25 @@ treeDiffer.Differ.prototype.findMinimumTransactions = function ( keyRoot1, keyRo
 		return index;
 	}
 
-	for ( i = keyRoot1.leftmost; i < keyRoot1.index + 1; i++ ) {
-		iMinus1 = i === keyRoot1.leftmost ? null : i - 1;
-		orderedNode1 = this.tree1.orderedNodes[ i ];
+	for ( let i = keyRoot1.leftmost; i < keyRoot1.index + 1; i++ ) {
+		const iMinus1 = i === keyRoot1.leftmost ? null : i - 1;
+		const orderedNode1 = this.tree1.orderedNodes[ i ];
 
-		for ( j = keyRoot2.leftmost; j < keyRoot2.index + 1; j++ ) {
-			jMinus1 = j === keyRoot2.leftmost ? null : j - 1;
-			orderedNode2 = this.tree2.orderedNodes[ j ];
+		for ( let j = keyRoot2.leftmost; j < keyRoot2.index + 1; j++ ) {
+			const jMinus1 = j === keyRoot2.leftmost ? null : j - 1;
+			const orderedNode2 = this.tree2.orderedNodes[ j ];
 
 			if ( orderedNode1.leftmost === keyRoot1.leftmost && orderedNode2.leftmost === keyRoot2.leftmost ) {
 
 				// Previous transactions, leading up to a remove, insert or change
-				remove = transactions[ iMinus1 ][ j ];
-				insert = transactions[ i ][ jMinus1 ];
-				change = transactions[ iMinus1 ][ jMinus1 ];
+				const remove = transactions[ iMinus1 ][ j ];
+				const insert = transactions[ i ][ jMinus1 ];
+				const change = transactions[ iMinus1 ][ jMinus1 ];
 
-				nodeDistance = this.getNodeDistance( orderedNode1, orderedNode2 );
+				const nodeDistance = this.getNodeDistance( orderedNode1, orderedNode2 );
 
 				// Cost of each transaction
-				transaction = getLowestCost(
+				const transaction = getLowestCost(
 					remove.length + this.removeCost,
 					insert.length + this.insertCost,
 					change.length + nodeDistance
@@ -452,15 +439,15 @@ treeDiffer.Differ.prototype.findMinimumTransactions = function ( keyRoot1, keyRo
 			} else {
 
 				// Previous transactions, leading up to a remove, insert or change
-				remove = transactions[ iMinus1 ][ j ];
-				insert = transactions[ i ][ jMinus1 ];
-				change = transactions[
+				const remove = transactions[ iMinus1 ][ j ];
+				const insert = transactions[ i ][ jMinus1 ];
+				const change = transactions[
 					orderedNode1.leftmost - 1 < keyRoot1.leftmost ? null : orderedNode1.leftmost - 1
 				][
 					orderedNode2.leftmost - 1 < keyRoot2.leftmost ? null : orderedNode2.leftmost - 1
 				];
 
-				transaction = getLowestCost(
+				const transaction = getLowestCost(
 					remove.length + this.removeCost,
 					insert.length + this.insertCost,
 					change.length + this.transactions[ i ][ j ].length
@@ -498,8 +485,7 @@ treeDiffer.Differ.prototype.findMinimumTransactions = function ( keyRoot1, keyRo
  * @return {Object} Corresponding nodes
  */
 treeDiffer.Differ.prototype.getCorrespondingNodes = function ( transactions, oldTreeLength, newTreeLength ) {
-	var i, j, rem, ins,
-		oldToNew = {},
+	const oldToNew = {},
 		newToOld = {},
 		remove = [],
 		insert = [],
@@ -507,7 +493,7 @@ treeDiffer.Differ.prototype.getCorrespondingNodes = function ( transactions, old
 		ilen = Math.max( oldTreeLength, newTreeLength ),
 		jlen = ilen;
 
-	for ( i = 0; i < transactions.length; i++ ) {
+	for ( let i = 0; i < transactions.length; i++ ) {
 		if ( transactions[ i ][ 0 ] === null ) {
 			insert.push( transactions[ i ][ 1 ] );
 		} else if ( transactions[ i ][ 1 ] === null ) {
@@ -519,17 +505,13 @@ treeDiffer.Differ.prototype.getCorrespondingNodes = function ( transactions, old
 		}
 	}
 
-	rem = remove.slice();
-	ins = insert.slice();
+	const rem = remove.slice();
+	const ins = insert.slice();
 
-	remove.sort( function ( a, b ) {
-		return a - b;
-	} );
-	insert.sort( function ( a, b ) {
-		return a - b;
-	} );
+	remove.sort( ( a, b ) => a - b );
+	insert.sort( ( a, b ) => a - b );
 
-	for ( i = 0, j = 0; i < ilen && j < jlen; i++, j++ ) {
+	for ( let i = 0, j = 0; i < ilen && j < jlen; i++, j++ ) {
 		if ( i === remove[ 0 ] ) {
 			// Old node is a remove
 			remove.shift();

@@ -10,44 +10,7 @@
  * 5. Display the diffs
  */
 
-/* global OO */
-
-// STEP 1
-
-/**
- * Tree node for conducting a tree diff on DOM nodes.
- *
- * @class
- * @extends treeDiffer.TreeNode
- *
- * @constructor
- * @param {Node} node DOM node
- */
-treeDiffer.DomTreeNode = function ( node ) {
-	// Parent constructor
-	treeDiffer.DomTreeNode.parent.call( this, node );
-};
-
-OO.inheritClass( treeDiffer.DomTreeNode, treeDiffer.TreeNode );
-
-// STEP 2
-
-/**
- * Determine whether two tree nodes are equal. Here nodes are considered
- * equal if they have the same tagName (if they are not text nodes), or
- * have the same text content (if they are text nodes).
- *
- * @param {treeDiffer.TreeNode} otherNode The node to compare to this node
- * @return {boolean} Nodes are equal
- */
-treeDiffer.DomTreeNode.prototype.isEqual = function ( otherNode ) {
-	if ( this.node.nodeType === Node.TEXT_NODE ) {
-		return otherNode.node.nodeType === Node.TEXT_NODE &&
-			otherNode.node.textContent === this.node.textContent;
-	} else {
-		return otherNode.node.tagName === this.node.tagName;
-	}
-};
+// STEP 1 & 2 - See DomTreeNode.js
 
 /**
  * Gets children of the original node.
@@ -55,12 +18,11 @@ treeDiffer.DomTreeNode.prototype.isEqual = function ( otherNode ) {
  * @return {Array} Array of nodes the same type as the original node
  */
 treeDiffer.DomTreeNode.prototype.getOriginalNodeChildren = function () {
-	var i, ilen, childNode,
-		children = [],
+	const children = [],
 		childNodes = this.node.childNodes;
 
-	for ( i = 0, ilen = childNodes.length; i < ilen; i++ ) {
-		childNode = childNodes[ i ];
+	for ( let i = 0, ilen = childNodes.length; i < ilen; i++ ) {
+		const childNode = childNodes[ i ];
 		if ( !( childNode.nodeType === Node.TEXT_NODE && childNode.textContent.match( /^\s*$/ ) ) ) {
 			children.push( childNode );
 		}
@@ -73,8 +35,7 @@ treeDiffer.DomTreeNode.prototype.getOriginalNodeChildren = function () {
  * Find and display the diff between two HTML trees.
  */
 treeDiffer.showExampleDiff = function () {
-	var i, ilen, diff, tree1, tree2,
-		treeInput1 = document.getElementsByClassName( 'treeInput1' )[ 0 ],
+	const treeInput1 = document.getElementsByClassName( 'treeInput1' )[ 0 ],
 		treeInput2 = document.getElementsByClassName( 'treeInput2' )[ 0 ],
 		diff1 = document.getElementsByClassName( 'diff1' )[ 0 ],
 		diff2 = document.getElementsByClassName( 'diff2' )[ 0 ],
@@ -91,7 +52,7 @@ treeDiffer.showExampleDiff = function () {
 	 * @param {string} className Class to add
 	 */
 	function addClassToNode( node, className ) {
-		var span;
+		let span;
 		if ( node.nodeType === Node.TEXT_NODE ) {
 			// Wrap text node in span
 			span = document.createElement( 'span' );
@@ -106,17 +67,17 @@ treeDiffer.showExampleDiff = function () {
 
 	// STEP 3
 
-	tree1 = new treeDiffer.Tree( root1, treeDiffer.DomTreeNode );
-	tree2 = new treeDiffer.Tree( root2, treeDiffer.DomTreeNode );
+	const tree1 = new treeDiffer.Tree( root1, treeDiffer.DomTreeNode );
+	const tree2 = new treeDiffer.Tree( root2, treeDiffer.DomTreeNode );
 
 	// STEP 4
 
-	diff = new treeDiffer.Differ( tree1, tree2 )
+	const diff = new treeDiffer.Differ( tree1, tree2 )
 		.transactions[ tree1.orderedNodes.length - 1 ][ tree2.orderedNodes.length - 1 ];
 
 	// STEP 5
 
-	for ( i = 0, ilen = diff.length; i < ilen; i++ ) {
+	for ( let i = 0, ilen = diff.length; i < ilen; i++ ) {
 		if ( diff[ i ][ 0 ] !== null && diff[ i ][ 1 ] !== null ) {
 			addClassToNode( tree1.orderedNodes[ diff[ i ][ 0 ] ].node, 'change' );
 			addClassToNode( tree2.orderedNodes[ diff[ i ][ 1 ] ].node, 'change' );
@@ -135,6 +96,6 @@ treeDiffer.showExampleDiff = function () {
 
 treeDiffer.showExampleDiff();
 
-document.getElementsByClassName( 'update' )[ 0 ].addEventListener( 'click', function () {
+document.getElementsByClassName( 'update' )[ 0 ].addEventListener( 'click', () => {
 	treeDiffer.showExampleDiff();
 } );
