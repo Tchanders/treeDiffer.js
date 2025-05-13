@@ -435,7 +435,9 @@ treeDiffer.Differ.prototype.findMinimumTransactions = function ( keyRoot1, keyRo
 					}
 				}
 
-				this.transactions[ i ][ j ] = transactions[ i ][ j ].slice();
+				// No need to do a shallow copy here as transactions[ i ][ j ] and
+				// this.transactions[ i ][ j ] will never be changed again after this line.
+				this.transactions[ i ][ j ] = transactions[ i ][ j ];
 			} else {
 
 				// Previous transactions, leading up to a remove, insert or change
