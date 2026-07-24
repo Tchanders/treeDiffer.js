@@ -206,55 +206,6 @@ treeDiffer.Tree.prototype.getNodeDescendants = function ( node ) {
 // We use [ 'null' ] as an index, but for consistencty with
 // variable indicies [ i ][ j ] we prefer not to use dot notation
 
-// The dynamic-programming step below builds, for every cell of the edit-distance
-// matrix, the full list of transactions leading to that cell. Storing these as
-// plain arrays meant every cell update copied an O(edit-distance) array (via
-// slice/push/concat), giving super-linear time and heavy GC pressure that made
-// large diffs (e.g. big tables) time out.
-//
-// Instead we represent each transaction list as an immutable persistent
-// sequence: a small binary tree of index values. Appending or concatenating is
-// O(1) (allocate one node, share the operands), and `.length` is O(1). The flat
-// array of indices is materialised once, at the end, only for the cells that are
-// actually kept. Order is preserved, so the output is identical to before.
-const EMPTY_SEQ = { length: 0 };
-
-// Append a single transaction index to a persistent sequence.
-const seqPush = ( seq, index ) => seq.length === 0 ?
-	{ length: 1, value: index } :
-	{ length: seq.length + 1, left: seq, right: { length: 1, value: index } };
-
-// Concatenate two persistent sequences.
-const seqConcat = ( seq1, seq2 ) => {
-	if ( seq1.length === 0 ) {
-		return seq2;
-	}
-	if ( seq2.length === 0 ) {
-		return seq1;
-	}
-	return { length: seq1.length + seq2.length, left: seq1, right: seq2 };
-};
-
-// Materialise a persistent sequence into a flat array of indices, in order.
-// Iterative (explicit stack) to avoid deep recursion on long sequences.
-const seqToArray = ( seq ) => {
-	const result = [];
-	if ( seq.length === 0 ) {
-		return result;
-	}
-	const stack = [ seq ];
-	while ( stack.length ) {
-		const node = stack.pop();
-		if ( node.value !== undefined ) {
-			result.push( node.value );
-		} else {
-			stack.push( node.right );
-			stack.push( node.left );
-		}
-	}
-	return result;
-};
-
 /**
  * Differ
  *
@@ -283,7 +234,7 @@ treeDiffer.Differ = function ( tree1, tree2, timeout ) {
 	// Temporary, changing store of transactions
 	const transactions = {
 		null: {
-			null: EMPTY_SEQ
+			null: []
 		}
 	};
 
@@ -312,7 +263,7 @@ treeDiffer.Differ = function ( tree1, tree2, timeout ) {
 	for ( let i = 0, ilen = this.tree1.orderedNodes.length; i < ilen; i++ ) {
 
 		transactions[ i ] = {
-			null: EMPTY_SEQ
+			null: []
 		};
 		this.transactionToIndex[ i ] = {
 			null: transactionIndex
@@ -321,8 +272,8 @@ treeDiffer.Differ = function ( tree1, tree2, timeout ) {
 		this.indexToTransaction.push( [ i, null ] );
 
 		for ( let j = 0, jlen = this.tree2.orderedNodes.length; j < jlen; j++ ) {
-			transactions[ null ][ j ] = EMPTY_SEQ;
-			transactions[ i ][ j ] = EMPTY_SEQ;
+			transactions[ null ][ j ] = [];
+			transactions[ i ][ j ] = [];
 
 			this.transactionToIndex[ null ][ j ] = transactionIndex;
 			transactionIndex += 1;
@@ -356,20 +307,20 @@ treeDiffer.Differ.prototype.populateTransactions = function ( transactions ) {
 
 		// Make transactions for tree -> null
 		const keyRoot1 = this.tree1.orderedNodes[ this.tree1.keyRoots[ i ] ];
-		let iNulls = EMPTY_SEQ;
+		const iNulls = [];
 		for ( let ii = keyRoot1.leftmost; ii < keyRoot1.index + 1; ii++ ) {
-			iNulls = seqPush( iNulls, this.transactionToIndex[ ii ][ null ] );
-			transactions[ ii ][ null ] = iNulls;
+			iNulls.push( this.transactionToIndex[ ii ][ null ] );
+			transactions[ ii ][ null ] = iNulls.slice();
 		}
 
 		for ( let j = 0, jlen = this.tree2.keyRoots.length; j < jlen; j++ ) {
 
 			// Make transactions of null -> tree
 			const keyRoot2 = this.tree2.orderedNodes[ this.tree2.keyRoots[ j ] ];
-			let jNulls = EMPTY_SEQ;
+			const jNulls = [];
 			for ( let jj = keyRoot2.leftmost; jj < keyRoot2.index + 1; jj++ ) {
-				jNulls = seqPush( jNulls, this.transactionToIndex[ null ][ jj ] );
-				transactions[ null ][ jj ] = jNulls;
+				jNulls.push( this.transactionToIndex[ null ][ jj ] );
+				transactions[ null ][ jj ] = jNulls.slice();
 			}
 
 			// Get the diff
@@ -384,12 +335,8 @@ treeDiffer.Differ.prototype.populateTransactions = function ( transactions ) {
 
 	for ( let i = 0, ilen = this.tree1.orderedNodes.length; i < ilen; i++ ) {
 		for ( let j = 0, jlen = this.tree2.orderedNodes.length; j < jlen; j++ ) {
-			if ( this.transactions[ i ][ j ] ) {
-				// Materialise the persistent sequence into a flat array of
-				// [ removeIndex, insertIndex ] transaction pairs (empty when
-				// the two sub-trees are identical).
-				this.transactions[ i ][ j ] = seqToArray( this.transactions[ i ][ j ] )
-					.map( getTransactionFromIndex );
+			if ( this.transactions[ i ][ j ] && this.transactions[ i ][ j ].length > 0 ) {
+				this.transactions[ i ][ j ] = this.transactions[ i ][ j ].map( getTransactionFromIndex );
 			}
 		}
 	}
@@ -420,22 +367,6 @@ treeDiffer.Differ.prototype.getNodeDistance = function ( node1, node2 ) {
 	return this.changeCost;
 };
 
-const getLowestCost = ( removeCost, insertCost, changeCost ) => {
-	// This used to be written as:
-	//  transaction = costs.indexOf( Math.min.apply( null, costs ) )
-	// but expanding into two simple comparisons makes it much faster.
-	let minCost = removeCost,
-		index = 0;
-	if ( insertCost < minCost ) {
-		index = 1;
-		minCost = insertCost;
-	}
-	if ( changeCost < minCost ) {
-		index = 2;
-	}
-	return index;
-};
-
 /**
  * Find the minimum transactions to get from the first tree to the second tree. This
  * method is the heart of the tree differ.
@@ -445,6 +376,21 @@ const getLowestCost = ( removeCost, insertCost, changeCost ) => {
  * @param {Object} transactions Temporary store of transactions between trees
  */
 treeDiffer.Differ.prototype.findMinimumTransactions = function ( keyRoot1, keyRoot2, transactions ) {
+	function getLowestCost( removeCost, insertCost, changeCost ) {
+		// This used to be written as:
+		//  transaction = costs.indexOf( Math.min.apply( null, costs ) )
+		// but expanding into two simple comparisons makes it much faster.
+		let minCost = removeCost,
+			index = 0;
+		if ( insertCost < minCost ) {
+			index = 1;
+			minCost = insertCost;
+		}
+		if ( changeCost < minCost ) {
+			index = 2;
+		}
+		return index;
+	}
 
 	for ( let i = keyRoot1.leftmost; i < keyRoot1.index + 1; i++ ) {
 		const iMinus1 = i === keyRoot1.leftmost ? null : i - 1;
@@ -472,16 +418,21 @@ treeDiffer.Differ.prototype.findMinimumTransactions = function ( keyRoot1, keyRo
 
 				if ( transaction === 0 ) {
 					// Record a remove
-					transactions[ i ][ j ] = seqPush( remove, this.transactionToIndex[ i ][ null ] );
+					( transactions[ i ][ j ] = remove.slice() ).push(
+						this.transactionToIndex[ i ][ null ]
+					);
 				} else if ( transaction === 1 ) {
 					// Record an insert
-					transactions[ i ][ j ] = seqPush( insert, this.transactionToIndex[ null ][ j ] );
-				} else if ( nodeDistance === 1 ) {
+					( transactions[ i ][ j ] = insert.slice() ).push(
+						this.transactionToIndex[ null ][ j ]
+					);
+				} else {
+					transactions[ i ][ j ] = change.slice();
 					// If nodes i and j are different, record a change,
 					// otherwise there is no transaction
-					transactions[ i ][ j ] = seqPush( change, this.transactionToIndex[ i ][ j ] );
-				} else {
-					transactions[ i ][ j ] = change;
+					if ( nodeDistance === 1 ) {
+						transactions[ i ][ j ].push( this.transactionToIndex[ i ][ j ] );
+					}
 				}
 
 				// No need to do a shallow copy here as transactions[ i ][ j ] and
@@ -505,13 +456,17 @@ treeDiffer.Differ.prototype.findMinimumTransactions = function ( keyRoot1, keyRo
 				);
 				if ( transaction === 0 ) {
 					// Record a remove
-					transactions[ i ][ j ] = seqPush( remove, this.transactionToIndex[ i ][ null ] );
+					( transactions[ i ][ j ] = remove.slice() ).push(
+						this.transactionToIndex[ i ][ null ]
+					);
 				} else if ( transaction === 1 ) {
 					// Record an insert
-					transactions[ i ][ j ] = seqPush( insert, this.transactionToIndex[ null ][ j ] );
+					( transactions[ i ][ j ] = insert.slice() ).push(
+						this.transactionToIndex[ null ][ j ]
+					);
 				} else {
 					// Record a change
-					transactions[ i ][ j ] = seqConcat( change, this.transactions[ i ][ j ] );
+					transactions[ i ][ j ] = change.concat( this.transactions[ i ][ j ] );
 				}
 
 			}
