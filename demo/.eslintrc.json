@@ -1,8 +1,0 @@
-{
-	"root": true,
-	"extends": "wikimedia/client",
-	"globals": {
-		"treeDiffer": "readonly",
-		"OO": "readonly"
-	}
-}
