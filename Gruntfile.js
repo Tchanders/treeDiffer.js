@@ -1,6 +1,8 @@
 'use strict';
 
 module.exports = function ( grunt ) {
+	const wrapper = grunt.file.read( 'build/wrapper.js' ).split( '// @content' );
+
 	grunt.loadNpmTasks( 'grunt-contrib-clean' );
 	grunt.loadNpmTasks( 'grunt-contrib-concat' );
 	grunt.loadNpmTasks( 'grunt-contrib-copy' );
@@ -8,6 +10,7 @@ module.exports = function ( grunt ) {
 	grunt.loadNpmTasks( 'grunt-stylelint' );
 
 	grunt.initConfig( {
+		pkg: grunt.file.readJSON( 'package.json' ),
 		eslint: {
 			options: {
 				cache: true,
@@ -23,18 +26,18 @@ module.exports = function ( grunt ) {
 		},
 		concat: {
 			options: {
-				sourceMap: true
+				sourceMap: true,
+				banner: wrapper[ 0 ],
+				footer: wrapper[ 1 ]
 			},
 			dist: {
 				files: {
 					'dist/treeDiffer-dist.js': [
-						'build/intro.js.txt',
 						'src/treeDiffer.js',
 						'src/treeDiffer.TreeNode.js',
 						'src/treeDiffer.Tree.js',
 						'src/treeDiffer.Differ.js',
-						'build/export.js',
-						'build/outro.js.txt'
+						'build/export.js'
 					]
 				}
 			}
