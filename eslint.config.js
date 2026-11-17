@@ -45,6 +45,16 @@ module.exports = defineConfig( [
 	},
 	{
 		files: [
+			'build/wrapper.js'
+		],
+		rules: {
+			strict: 'off',
+			'no-unused-vars': 'off',
+			indent: 'off'
+		}
+	},
+	{
+		files: [
 			'src/**/*.js'
 		],
 		extends: [ wikimedia( 'client' ) ],
